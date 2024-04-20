@@ -1,6 +1,5 @@
 package org.example.utility;
 
-import lombok.SneakyThrows;
 import org.common.commands.Command;
 
 import java.io.ByteArrayInputStream;
