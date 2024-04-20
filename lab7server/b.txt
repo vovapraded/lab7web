@@ -1,3 +1,0 @@
-info
-execute_script c.txt
-help
