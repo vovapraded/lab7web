@@ -18,6 +18,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.common.primitives.Bytes;
 
@@ -102,32 +103,31 @@ private DatagramChannel client;
         SocketAddress address = null;
         Selector selector = Selector.open();
         client.register(selector, SelectionKey.OP_READ);
-        int timeout = 5000;
-        if (isOnce) timeout=100;
-        while(address == null) {
-                address = waitResponse(selector,timeout,buffer,isOnce);
-                if (isOnce) break;
-        }
+        long startTime = System.currentTimeMillis();
+        int timeout = isOnce ? 1 : 5000; // Устанавливаем таймаут в зависимости от значения isOnce
+        address = waitResponse(selector,timeout,buffer);
+        selector.close(); // Закрываем селектор после использования
+        if (address == null) throw new NoResponseException("Нет ответа более " + timeout / 1000 + " секунд. Проверьте соединение и повторите запрос");
         return buffer.array();
     }
 
-    private SocketAddress  waitResponse(Selector selector, int timeout, ByteBuffer buffer,boolean isOnce) throws IOException,NoResponseException {
-        while (true) {
-            if (selector.select(timeout) == 0) {
-                throw new NoResponseException("Нет ответа более " + timeout / 1000 + " секунд. Проверьте соединение и повторите запрос");
+    private SocketAddress  waitResponse(Selector selector, int timeout, ByteBuffer buffer) throws IOException,NoResponseException {
+        selector.select(timeout); // Ожидаем таймаут
+        Set<SelectionKey> keys = selector.selectedKeys();
+        var iter = keys.iterator();
+        if (iter.hasNext()) {
+            SelectionKey key = iter.next(); iter.remove();
+            if (key.isValid()) {
+               if (key.isReadable()) {
+                   return client.receive(buffer);
+               }
             }
-            Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-            while (iterator.hasNext()) {
-                SelectionKey key = iterator.next();
-                iterator.remove();
-                if (key.isReadable()) {
-                    return client.receive(buffer);
-                }
-            }
-
         }
-
+        return null;
     }
+
+
+
 
 
     private byte[] receiveData(boolean isOnce) throws NoResponseException {
@@ -154,7 +154,7 @@ private DatagramChannel client;
 
 
     public Response getResponse(boolean isOnce) throws  NoResponseException, DeserializeException {
-        return Deserializer.deserialize(receiveData(isOnce), Response.class);
+         return Deserializer.deserialize(receiveData(isOnce), Response.class);
     }
 
 }

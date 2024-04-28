@@ -1,7 +1,6 @@
 package org.example.managers;
 
 import org.common.commands.Command;
-import org.common.commands.authorization.AuthorizationCommand;
 import org.common.commands.authorization.Register;
 import org.common.managers.Collection;
 import org.common.network.Response;
@@ -48,50 +47,47 @@ public class ExecutorOfCommands {
 //    }
     public void executeCommand(Command command,SocketAddress address) throws InvalidFormatException {
         command.setResponseManager(responseManager);
-        if (isRegisterCommand(command)) {
-            executeRegisterCommand(command,address);
-        }else {
-            executeCommonCommand(command,address);
+        try {
+            if (isRegisterCommand(command)) {
+                checkAuthRegisterCommand(command, address);
+            } else {
+                checkAuthCommonCommand(command, address);
+            }
+            logger.debug("Пользователь "+command.getAuthorization().getLogin()+ " авторизован успешно");
+            command.execute();
+        }catch (AuthorizationException e){
+            logger.debug("Пользователь "+command.getAuthorization().getLogin()+ " не авторизован");
+            responseManager.addToSend(e.getMessage(),command);
+            responseManager.send(command);
         }
+
+
     }
-    public void executeRegisterCommand(Command command,SocketAddress address) throws InvalidFormatException {
+    public void checkAuthRegisterCommand(Command command, SocketAddress address) throws AuthorizationException {
         var response=Response.builder()
                 .address(address)
-                .loginCorrect(true).passwordCorrect(true)
+                .loginCorrect(false).passwordCorrect(true)
                 .build();
         responseManager.initResponse(command,response);
-        try {
                 var login=command.getAuthorization().getLogin();
                 var password=command.getAuthorization().getPassword();
                 AuthorizationManager.register(login,password);
-                command.execute();
-            }
-        catch (AuthorizationException e){
-            response.setLoginCorrect(false);
-            responseManager.addToSend(e.getMessage(),command);
-            responseManager.send(command);
+                response.setLoginCorrect(true);
 
-        }
+
     }
 
-        public void executeCommonCommand(Command command,SocketAddress address) throws InvalidFormatException {
-        try {
+        public void checkAuthCommonCommand(Command command,SocketAddress address) throws AuthorizationException {
             var isAuthorized=checkAuthorizationAndGenerateResponse(command,address);
-            if ( isAuthorized ){
-                command.execute();
-                logger.debug("Команда "+command.getClass().getName()+" выполнена успешно");
-            }else{
+            if ( !isAuthorized ){
                 logger.debug("Команда "+command.getClass().getName()+" не выполнена, клиент "+responseManager.getResponse(command).getAddress()+" не авторизован");
                 if (!responseManager.getResponse(command).isLoginCorrect())
                     throw  new AuthorizationException( "Вы не авторизованы, неверный логин");
                 else if (!responseManager.getResponse(command).isPasswordCorrect())
                     throw  new AuthorizationException( "Вы не авторизованы, неверный пароль");
-            }
-        }catch (AuthorizationException e){
-            responseManager.addToSend(e.getMessage(),command);
-            responseManager.send(command);
 
-        }
+            }
+
     }
 
 

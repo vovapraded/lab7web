@@ -31,5 +31,7 @@ public class CurrentResponseManager implements ResponseManager {
     public void send(Command command){
         var response = responses.get(command);
         ResponsePublisher.sendResponse(response, response.getAddress());
+        logger.debug("Респонс на комманду "+command.getClass().getName()+" отправлен по адрессу "+response.getAddress());
+
     }
 }

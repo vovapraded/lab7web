@@ -154,7 +154,6 @@ public class UdpServer implements ResponseListener {
     public void onResponse(Response response, SocketAddress address) {
         try {
             sendData(Serializer.serialize(response),address);
-            logger.debug("Респонс отправлен по адрессу "+address);
         } catch (IOException e) {
             logger.error("Не получилось отправить ответ клиенту: "+address);
         }catch (SerializeException e){
