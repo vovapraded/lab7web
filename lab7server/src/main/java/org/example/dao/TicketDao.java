@@ -80,7 +80,8 @@ public class TicketDao implements CollectionInDatabaseManager {
         var tick = new JPAQuery<Ticket>(session)
                 .select(ticket)
                 .from(ticket)
-                .where(ticket.id.eq(id)).fetchOne();
+                .where(ticket.id.eq(id))
+                .fetchOne();
         session.remove(tick);
         session.getTransaction().commit();
     }

@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  * a class for storing coordinates data
@@ -22,7 +23,7 @@ import java.io.Serializable;
 public class User {
     @Id
     private String login;
-    private String password;
+    private BigInteger password;
     private String salt;
 
 }

@@ -16,4 +16,6 @@ public interface CollectionInDatabaseManager {
     void removeTicket(Ticket ticket);
 
     void removeTicket(Long id);
+
+
 }

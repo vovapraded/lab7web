@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.example.dao.UserDao;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 
 public class AuthorizationManager {
@@ -17,7 +18,7 @@ public class AuthorizationManager {
         loginCorrect = true;
         var hash = hashAndSalt.getLeft();
         var salt = hashAndSalt.getRight();
-        String currentHash = null;
+        BigInteger currentHash = null;
         try {
             currentHash = PasswordManager.getHash(password,salt);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ignored) {
@@ -31,7 +32,7 @@ public class AuthorizationManager {
         saveNewPassword(login,password);
     }
     private static void saveNewPassword(String login,String password)  {
-        ImmutablePair<String, String> hashAndSalt = null;
+        ImmutablePair<BigInteger, String> hashAndSalt = null;
         try {
             hashAndSalt = PasswordManager.getHash(password);
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ignored) {

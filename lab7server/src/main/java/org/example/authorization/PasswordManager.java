@@ -2,6 +2,7 @@ package org.example.authorization;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -9,16 +10,16 @@ import java.security.SecureRandom;
 public class PasswordManager {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int LENGTH = 20;
-    public static String getHash(String password,String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public static BigInteger getHash(String password,String salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA1");
-        var hash = new String(md.digest(
+        var hash = new BigInteger(md.digest(
                 (password  + salt).getBytes("UTF-8")));
         return hash;
     }
-    public static ImmutablePair<String,String> getHash(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public static ImmutablePair<BigInteger,String> getHash(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA1");
         var salt = getRandomString(LENGTH);
-        var hash = new String(md.digest(
+        var hash = new BigInteger(md.digest(
                 (password  + salt).getBytes("UTF-8")));
         return new ImmutablePair<>(hash,salt);
     }

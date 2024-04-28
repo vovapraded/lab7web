@@ -40,7 +40,11 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
     @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "venue_id")
     private Venue venue; //Поле не может быть null
+    @Column(name = "created_by")
+    private transient String createdBy; //Поле не может быть null, Строка не может быть пустой
+
     //конструктор без даты и id
+
     public Ticket(String name,Coordinates coordinates,Long price,Long discount,Boolean refundable,TicketType type,Venue venue){
         this.name= name;
         this.coordinates=coordinates;
