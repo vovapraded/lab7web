@@ -21,8 +21,8 @@ public class RemoveGreater extends Command implements Serializable {
     public void execute() {
             Ticket ticket = ticketArg;
             collection.removeGreater(ticket);
-            console.addToSend("Операция прошла успешно",getAddress());
-        console.send(getAddress());
+            responseManager.addToSend("Операция прошла успешно",this);
+        responseManager.send(this);
 
     }
 
@@ -30,7 +30,7 @@ public class RemoveGreater extends Command implements Serializable {
     public void validate(String arg1) {
         this.stringArg = arg1;
         if (!Validator.validate(stringArg, TypesOfArgs.Long,false) || Long.parseLong(stringArg)<=0){
-            throw new InvalidFormatException("Id должен быть числом > 0",getAddress());
+            throw new InvalidFormatException("Id должен быть числом > 0",this);
         }
     }
 }

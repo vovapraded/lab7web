@@ -24,22 +24,22 @@ public class Insert extends Command implements Serializable {
         try {
             id = ValidateId.validateId(idStr, true, collection);
         }catch (InvalidFormatException e){
-            e.setAddress(getAddress());
+            e.setCommand(this);
             throw e;
         }
 
         ticketArg.setId(id);
         ticketArg.setCreationDate(new Date());
         collection.insertElement(ticketArg);
-        console.addToSend("Билет успешно введён",getAddress());
-        console.send(getAddress());
+        responseManager.addToSend("Билет успешно введён",this);
+        responseManager.send(this);
     }
 
     @Override
     public void validate(String arg1) {
         this.stringArg = arg1;
         if (!Validator.validate(stringArg, TypesOfArgs.Long,false) || Long.parseLong(stringArg)<=0){
-            throw new InvalidFormatException("Id должен быть числом > 0",getAddress());
+            throw new InvalidFormatException("Id должен быть числом > 0",this);
         }
     }
 }

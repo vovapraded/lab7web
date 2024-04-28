@@ -1,5 +1,7 @@
 package org.example.connection;
 
+import org.common.network.Response;
+
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +15,10 @@ public class ResponsePublisher {
     }
 
     // Метод для генерации события
-    public static  void generateResponse(byte[] data, SocketAddress address) {
+    public static  void sendResponse(Response response, SocketAddress address) {
         for (ResponseListener listener : listeners) {
-            listener.onResponse(data,address);
+            listener.onResponse(response,address);
+
         }
     }
 }

@@ -17,11 +17,11 @@ public class AverageOfPrice extends Command implements Serializable {
     public void execute() {
         var average = collection.getAveragePrice();
         if (average.isEmpty()) {
-            console.addToSend("Коллекция пуста", getAddress());
+            responseManager.addToSend("Коллекция пуста", this);
         } else {
-            console.addToSend("Средняя цена " + average.getAsDouble(),getAddress());
+            responseManager.addToSend("Средняя цена " + average.getAsDouble(),this);
         }
-        console.send(getAddress());
+        responseManager.send(this);
     }
 
     @Override

@@ -1,11 +1,14 @@
 package org.example.managers;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.common.commands.Command;
+import org.common.commands.authorization.AuthorizationCommand;
+import org.common.commands.authorization.Register;
 import org.common.managers.Collection;
-import org.common.utility.Console;
+import org.common.network.Response;
 import org.common.utility.InvalidFormatException;
-import org.example.utility.*;
+import org.example.authorization.AuthorizationException;
+import org.example.authorization.AuthorizationManager;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,21 +22,78 @@ public class ExecutorOfCommands {
 
 
     private final Collection collection = Collection.getInstance();
-    private  final Console console;
+    private  final CurrentResponseManager responseManager;
     private static final Logger logger = LoggerFactory.getLogger(ExecutorOfCommands.class);
 
 
-    public ExecutorOfCommands( Console console){
-        this.console = console;
+    public ExecutorOfCommands( CurrentResponseManager responseManager){
+        this.responseManager = responseManager;
     }
-    public void executeCommand(ImmutablePair pair) throws InvalidFormatException {
-        Command command =(Command) pair.getLeft();
-        SocketAddress address = (SocketAddress) pair.getRight();
-            command.setConsole(console);
-            command.setAddress(address);
-            command.execute();
-            logger.debug("Команда "+command.getClass().getName()+" выполнена успешно");
+
+    public boolean isRegisterCommand(Command command){
+        if (command instanceof Register) return true;
+        else return false;
     }
+    public boolean checkAuthorizationAndGenerateResponse(@NotNull Command command,SocketAddress address){
+        var login=command.getAuthorization().getLogin();
+        var password=command.getAuthorization().getPassword();
+        var result  = AuthorizationManager.checkLoginAndPassword(login,password);
+        var loginCorrect = result.getLeft();
+        var passwordCorrect = result.getRight();
+        responseManager.initResponse(command,Response.builder().loginCorrect(loginCorrect).passwordCorrect(passwordCorrect).address(address).build());
+        return loginCorrect & passwordCorrect;
+    }
+//    public boolean checkAuthorization(Command command)  {
+//
+//    }
+    public void executeCommand(Command command,SocketAddress address) throws InvalidFormatException {
+        command.setResponseManager(responseManager);
+        if (isRegisterCommand(command)) {
+            executeRegisterCommand(command,address);
+        }else {
+            executeCommonCommand(command,address);
+        }
+    }
+    public void executeRegisterCommand(Command command,SocketAddress address) throws InvalidFormatException {
+        var response=Response.builder()
+                .address(address)
+                .loginCorrect(true).passwordCorrect(true)
+                .build();
+        responseManager.initResponse(command,response);
+        try {
+                var login=command.getAuthorization().getLogin();
+                var password=command.getAuthorization().getPassword();
+                AuthorizationManager.register(login,password);
+                command.execute();
+            }
+        catch (AuthorizationException e){
+            response.setLoginCorrect(false);
+            responseManager.addToSend(e.getMessage(),command);
+            responseManager.send(command);
+
+        }
+    }
+
+        public void executeCommonCommand(Command command,SocketAddress address) throws InvalidFormatException {
+        try {
+            var isAuthorized=checkAuthorizationAndGenerateResponse(command,address);
+            if ( isAuthorized ){
+                command.execute();
+                logger.debug("Команда "+command.getClass().getName()+" выполнена успешно");
+            }else{
+                logger.debug("Команда "+command.getClass().getName()+" не выполнена, клиент "+responseManager.getResponse(command).getAddress()+" не авторизован");
+                if (!responseManager.getResponse(command).isLoginCorrect())
+                    throw  new AuthorizationException( "Вы не авторизованы, неверный логин");
+                else if (!responseManager.getResponse(command).isPasswordCorrect())
+                    throw  new AuthorizationException( "Вы не авторизованы, неверный пароль");
+            }
+        }catch (AuthorizationException e){
+            responseManager.addToSend(e.getMessage(),command);
+            responseManager.send(command);
+
+        }
+    }
+
 
 
 //

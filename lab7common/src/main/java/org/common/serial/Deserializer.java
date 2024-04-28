@@ -1,13 +1,11 @@
-package org.example.utility;
-
-import org.common.commands.Command;
+package org.common.serial;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 
 public class Deserializer {
 
-    public static Command deserialize(byte[] data) throws RecieveDataException{
+    public static <T> T deserialize(byte[] data,Class<T> clazz ) throws DeserializeException {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
         try {
             // Создание объектного потока ввода для десериализации объекта
@@ -15,10 +13,10 @@ public class Deserializer {
 
 // Десериализация объекта из потока и приведение его к нужному типу
             Object deserializedObject = objectStream.readObject();
-            return (Command) deserializedObject;
+            return  clazz.cast(deserializedObject);
         }
         catch (Exception e){
-            throw new RecieveDataException("Ошибка десереализации команды");
+            throw new DeserializeException("Ошибка десереализации объекта "+clazz);
         }
 
 

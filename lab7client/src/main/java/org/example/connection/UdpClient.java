@@ -1,12 +1,16 @@
 package org.example.connection;
 import org.common.commands.Command;
+import org.common.network.Response;
+import org.common.network.SendException;
+import org.common.serial.DeserializeException;
+import org.common.serial.Deserializer;
+import org.common.serial.SerializeException;
+import org.common.serial.Serializer;
 import org.example.utility.CurrentConsole;
 import org.example.utility.NoResponseException;
 import org.common.utility.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -64,27 +68,12 @@ private DatagramChannel client;
 
 
 
-    public void sendCommand(Command command) {
-        boolean isSend = false;
+    public void sendCommand(Command command) throws SerializeException {
         try {
-            // Данные для отправки
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
-            objectStream.writeObject(command);
-            objectStream.flush();
-            isSend = true;
-            sendData(byteStream.toByteArray());
-            //отправляем
+            sendData(Serializer.serialize(command));
         } catch (IOException e) {
-            if (isSend){
-                System.out.println("Отправка не удалась: "+e.getMessage());
-
-            }else {
-                System.out.println("Сереализация не удалась: "+e.getMessage());
-
-            }
+            throw new SendException("Ошибка отправки данных, поробуйте ещё раз");
         }
-
 
 
     }
@@ -164,8 +153,8 @@ private DatagramChannel client;
         }
 
 
-    public String getResponse(boolean isOnce) throws  NoResponseException{
-        return new String(receiveData(isOnce));
+    public Response getResponse(boolean isOnce) throws  NoResponseException, DeserializeException {
+        return Deserializer.deserialize(receiveData(isOnce), Response.class);
     }
 
 }

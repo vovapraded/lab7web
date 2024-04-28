@@ -2,6 +2,12 @@ package org.example.utility;
 
 import java.io.IOException;
 
+import org.common.commands.authorization.AuthorizationCommand;
+import org.common.network.SendException;
+import org.common.serial.DeserializeException;
+import org.common.serial.SerializeException;
+import org.example.authorization.AuthorizationManager;
+import org.example.authorization.NoAuthorizationException;
 import org.example.connection.UdpClient;
 import org.example.managers.*;
 import org.common.utility.*;
@@ -20,7 +26,7 @@ public class Main {
             String s = currentConsole.getInput();
             if (s.equals("\\")) {
                 try {
-                    currentConsole.print(udpClient.getResponse(true).trim());
+                    currentConsole.print(udpClient.getResponse(true).getMessageBySingleString());
                 }catch (NoResponseException e){
                     currentConsole.print(e.getMessage());
                 }
@@ -35,17 +41,22 @@ public class Main {
                         throw new InvalidFormatException("Слишком много аргументов");
                     }
                    var command = creator.createCommand(cmd, arg2);
+
                    if (command==null){
                        continue;
                    }
                     try {
                         udpClient.sendCommand(command);
-                        currentConsole.print(udpClient.getResponse(false).trim());
-                    }catch (NoResponseException e){
+                        var resp = udpClient.getResponse(false);
+                        if (!resp.isPasswordCorrect() || !resp.isLoginCorrect()){
+                            AuthorizationManager.resetAuth();
+                        }
+                        currentConsole.print(resp.getMessageBySingleString());
+                    }catch (NoResponseException | SendException | SerializeException | DeserializeException e) {
                         currentConsole.print(e.getMessage());
                     }
 
-                } catch (InvalidFormatException e) {
+                } catch (InvalidFormatException | NoAuthorizationException e) {
                     currentConsole.print(e.getMessage());
                 }
             }

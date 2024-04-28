@@ -20,25 +20,23 @@ public class ReplaceIfGreater extends Command implements Serializable {
         try {
             ValidateId.validateId(idStr, false, collection);
         }catch (InvalidFormatException e){
-            e.setAddress(getAddress());
+            e.setCommand(this);
             throw e;
         }
         Long id = Long.parseLong(idStr);
         Ticket oldTicket = collection.getElement(id);
-        System.out.println(oldTicket);
         Ticket newTicket = ticketArg ;
-        System.out.println(newTicket);
 
         if (newTicket.compareTo(oldTicket)>0){
-            console.addToSend("Операция прошла успешно. Замена произошла",getAddress());
+            responseManager.addToSend("Операция прошла успешно. Замена произошла",this);
             collection.removeElement(id);
             newTicket.setId(id);
             collection.insertElement(newTicket);
         }
         else {
-            console.addToSend("Операция прошла успешно. Замена не произошла",getAddress());
+            responseManager.addToSend("Операция прошла успешно. Замена не произошла",this);
         }
-        console.send(getAddress());
+        responseManager.send(this);
 
     }
 
@@ -46,7 +44,7 @@ public class ReplaceIfGreater extends Command implements Serializable {
     public void validate(String arg1) {
         this.stringArg = arg1;
         if (!Validator.validate(stringArg, TypesOfArgs.Long,false) || Long.parseLong(stringArg)<=0){
-            throw new InvalidFormatException("Id должен быть числом > 0",getAddress());
+            throw new InvalidFormatException("Id должен быть числом > 0",this);
         }
     }
 }

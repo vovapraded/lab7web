@@ -7,7 +7,6 @@ import org.common.utility.Console;
 
 
 import java.io.*;
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,7 +16,7 @@ import static lombok.AccessLevel.PRIVATE;
  * a class for reading and writing from the console
  */
 @NoArgsConstructor(access = PRIVATE)
-public class CurrentConsole extends Console {
+public class CurrentConsole implements Console {
     public static CurrentConsole getInstance() {
         return INSTANCE;
     }
@@ -26,16 +25,17 @@ public class CurrentConsole extends Console {
     private  Scanner fileScanner = null;
     private     Scanner defScanner = new Scanner(System.in);
     private  Scanner scanner;
-
+@Override
     public Scanner getScanner() {
         return scanner;
     }
+    @Override
     public void printHello(){
         print("Добро пожаловать!\n" +
                 "Введите help для вывода инструкции");
     }
 
-
+@Override
     public String getInput() {
         String input = null;
         checkScanner();
@@ -66,7 +66,8 @@ public class CurrentConsole extends Console {
 
         return  getInput();
     }
-    private void  goToMenu(){
+    @Override
+    public void  goToMenu(){
         throw new InvalidFormatException("Операция отменена");
     }
     @Override
@@ -85,6 +86,8 @@ public class CurrentConsole extends Console {
         return input;
     }
 
+
+
     public void checkScanner(){
         if (fileScanner==null){
             scanner=defScanner;
@@ -93,23 +96,14 @@ public class CurrentConsole extends Console {
         }
     }
     @Override
-
     public void selectFileScanner(Scanner scanner) {
         this.fileScanner = scanner;
     }
-
+@Override
     public void selectConsoleScanner() {
         this.fileScanner = null;
     }
-    public void print(String s){
-        System.out.println(s);
-    }
 
 
-    @Override
-    public void addToSend(String s, SocketAddress address) {
-    }
-@Override
-    public void send( SocketAddress address) {
-    }
+
 }

@@ -21,12 +21,12 @@ public class RemoveKey extends Command implements Serializable {
         try {
             id = ValidateId.validateId(idStr, false, collection);
         }catch (InvalidFormatException e){
-            e.setAddress(getAddress());
+            e.setCommand(this);
             throw e;
         }
         collection.removeElement(id);
-        console.addToSend("Элемент удалён",getAddress());
-        console.send(getAddress());
+        responseManager.addToSend("Элемент удалён",this);
+        responseManager.send(this);
 
     }
 
@@ -34,7 +34,7 @@ public class RemoveKey extends Command implements Serializable {
     public void validate(String arg1) {
         this.stringArg = arg1;
         if (!Validator.validate(stringArg, TypesOfArgs.Long,false) || Long.parseLong(stringArg)<=0){
-            throw new InvalidFormatException("Id должен быть числом > 0",getAddress());
+            throw new InvalidFormatException("Id должен быть числом > 0",this);
         }
     }
 }

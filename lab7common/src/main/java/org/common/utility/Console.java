@@ -1,24 +1,32 @@
 package org.common.utility;
 
+import org.common.network.Response;
+
 import java.net.SocketAddress;
 import java.util.Scanner;
 
 /**
  * a class for reading and writing from the console
  */
-public abstract   class Console {
-    protected Console(){
-    }
+public interface     Console {
 
-    public abstract  void addToSend( String s,SocketAddress address);
 
     public abstract void selectFileScanner(Scanner scanner);
 
-    public abstract void send(SocketAddress address);
 
-    public abstract String getInputFromCommand(int minCountOfArgs,int maxCountOfArgs) ;
+    public abstract Scanner getScanner();
 
-    public void print(String s) {
+    void printHello();
+
+    public abstract String getInput();
+
+    public abstract void  goToMenu();
+
+    public abstract String getInputFromCommand(int minCountOfArgs, int maxCountOfArgs) ;
+
+    default void print(String s) {
         System.out.println(s);
     }
+
+    public abstract void selectConsoleScanner();
 }

@@ -1,5 +1,7 @@
 package org.common.dto;
 
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 import java.io.Serializable;
 

@@ -21,20 +21,20 @@ public class RemoveGreaterKey extends Command implements  Serializable {
     public void execute() {
         Long id = null;
         try {
-            ValidateId.validateId(stringArg, false, collection);
+            id = ValidateId.validateId(stringArg, false, collection);
         }catch (InvalidFormatException e){
-            e.setAddress(getAddress());
+            e.setCommand(this);
             throw e;
         }
-        int sizeBefore = collection.getCountOfElements();
+        long sizeBefore = collection.getCountOfElements();
             collection.removeGreaterKey(id);
-            int sizeAfter = collection.getCountOfElements();
+            long sizeAfter = collection.getCountOfElements();
             if (sizeAfter != sizeBefore) {
-                console.addToSend("Успешно удалено",getAddress());
+                responseManager.addToSend("Успешно удалено",this);
             }else {
-                console.addToSend("Нет таких элементов",getAddress());
+                responseManager.addToSend("Нет таких элементов",this);
             }
-        console.send(getAddress());
+        responseManager.send(this);
 
 
 
@@ -44,7 +44,7 @@ public class RemoveGreaterKey extends Command implements  Serializable {
     public void validate(String arg1) {
         this.stringArg = arg1;
         if (!Validator.validate(stringArg, TypesOfArgs.Long,false) || Long.parseLong(stringArg)<=0){
-            throw new InvalidFormatException("Id должен быть числом > 0",getAddress());
+            throw new InvalidFormatException("Id должен быть числом > 0",this);
         }
 
     }

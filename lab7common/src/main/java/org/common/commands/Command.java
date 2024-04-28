@@ -1,6 +1,8 @@
 package org.common.commands;
 import lombok.Getter;
 import lombok.Setter;
+import org.common.commands.authorization.AuthorizationCommand;
+import org.common.commands.inner.objects.Authorization;
 import org.common.dto.Ticket;
 import org.common.managers.Collection;
 import org.common.managers.*;
@@ -22,6 +24,9 @@ public abstract class Command implements Serializable {
     protected Command() {
 
     }
+//   public void   send()  {
+//       responseManager.send(this);
+//   }
 
     public abstract void execute();
     public abstract void validate(String arg1);
@@ -32,11 +37,17 @@ public abstract class Command implements Serializable {
             var ticket= creator.createTicket(null);
             this.setTicketArg(ticket);
         }
+
     }
     protected String stringArg=null;
     protected Ticket ticketArg=null;
+    private Authorization authorization = null;
     protected static final Collection collection = Collection.getInstance();
     protected  transient    Console console ;
-    private transient SocketAddress address;
+    protected  transient    ResponseManager responseManager ;
+    public void setConsole (Console console){
+        this.console = console;
+    }
+
 
 }

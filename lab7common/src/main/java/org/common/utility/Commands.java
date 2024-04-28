@@ -21,7 +21,9 @@ public enum Commands {
     remove_greater_key(1,false),
     average_of_price(0,false),
     filter_less_than_venue(1,false),
-    print_descending(0,false);
+    print_descending(0,false),
+    login(0,false),
+    register(0,false);
     @Getter
     private final int countArgs;
     @Getter

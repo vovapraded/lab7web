@@ -10,6 +10,8 @@
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
+        <querydsl.version>5.0.0</querydsl.version>
+
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -27,19 +29,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>2.0.13</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.5.0-M1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-
-
-
-
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -51,20 +40,91 @@
             <artifactId>guava-primitives</artifactId>
             <version>r03</version>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.5</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
+
+
+        <!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa -->
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${querydsl.version}</version>
+            <classifier>jakarta</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <classifier>jakarta</classifier>
+            <version>${querydsl.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>21.0.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-apt -->
+
+
+        <!-- https://mvnreposddfdf.com/artifact/org.hibernate/hibernate-core -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.4.4.Final</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.6.15.Final</version>
+        </dependency>
 
 
 
 
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.12</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.32</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <version>7.4</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
@@ -80,11 +140,18 @@
             <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+
+        <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+        <!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+        <!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.5.5</version>
-            <scope>compile</scope>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+            <version>2.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
@@ -92,28 +159,88 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.5.0-M1</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/com.mysema.maven/apt-maven-plugin -->
 
     </dependencies>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.9.0</version>
-                    <configuration>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>1.18.32</version>
-                            </path>
-                        </annotationProcessorPaths>
-                    </configuration>
-                </plugin>
-            </plugins>
 
-        </pluginManagement>
+    <build>
+        <plugins>
+
+            <!-- Плагин Maven Compiler для использования аннотационного процессора -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.9.0</version>
+                <executions>
+                    <execution>
+                        <id>querydsl</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <proc>only</proc>
+                            <!-- Добавление пути к аннотационному процессору Querydsl -->
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>com.querydsl</groupId>
+                                    <artifactId>querydsl-apt</artifactId>
+                                    <version>${querydsl.version}</version>
+                                </path>
+                                <!-- Добавление пути к артефакту Jakarta Persistence API -->
+                                <path>
+                                    <!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+                                    <groupId>jakarta.persistence</groupId>
+                                    <artifactId>jakarta.persistence-api</artifactId>
+                                    <version>3.1.0</version>
+
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--     <plugin>-->
+            <!--         <groupId>org.apache.maven.plugins</groupId>-->
+            <!--         <artifactId>maven-enforcer-plugin</artifactId>-->
+            <!--         <version>1.0.1</version>-->
+            <!--         <executions>-->
+            <!--             <execution>-->
+            <!--                 <id>enforce</id>-->
+            <!--                 <configuration>-->
+            <!--                     <rules>-->
+            <!--                         <DependencyConvergence/>-->
+            <!--                     </rules>-->
+            <!--                 </configuration>-->
+            <!--                 <goals>-->
+            <!--                     <goal>enforce</goal>-->
+            <!--                 </goals>-->
+            <!--                 <phase>validate</phase>-->
+            <!--             </execution>-->
+            <!--         </executions>-->
+            <!--     </plugin>-->
+        </plugins>
     </build>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>1.5.15</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>3.1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 
 </project>

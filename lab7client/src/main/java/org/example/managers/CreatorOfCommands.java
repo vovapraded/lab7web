@@ -1,8 +1,13 @@
 package org.example.managers;
 
 import org.common.commands.*;
+import org.common.commands.authorization.AuthorizationCommand;
+import org.common.commands.authorization.Login;
+import org.common.commands.authorization.Register;
 import org.common.utility.*;
 import org.common.managers.Collection;
+import org.example.authorization.AuthorizationManager;
+import org.example.authorization.NoAuthorizationException;
 import org.example.utility.CurrentConsole;
 import org.common.utility.InvalidFormatException;
 
@@ -26,7 +31,8 @@ public class CreatorOfCommands {
         commands.put("exit",new Exit());
         commands.put("clear",new Clear());
         commands.put("info",new Info());
-        commands.put("save",new Save());
+        commands.put("login",new Login());
+        commands.put("register",new Register());
 
         commands.put("remove_greater",new RemoveGreater());
         commands.put("remove_greater_key", new RemoveGreaterKey());
@@ -36,7 +42,7 @@ public class CreatorOfCommands {
         commands.put("replace_if_greater",new ReplaceIfGreater());
         commands.put("filter_less_than_venue",new FilterLessThanVenue());
     }
-    public Command createCommand(String cmd, String arg1) {
+    public Command createCommand(String cmd, String arg1) throws NoAuthorizationException {
         if (commands.containsKey(cmd)){
             int a = arg1.isEmpty() ? 0 : 1;
             try {
@@ -48,6 +54,7 @@ public class CreatorOfCommands {
             }
             var command=commands.get(cmd);
             command.setConsole(currentConsole);
+            AuthorizationManager.prepareCommand(command);
             command.validate(arg1);
             command.prepareToSend(Commands.valueOf(cmd).isTicketArgIsNeeded());
 
@@ -55,6 +62,9 @@ public class CreatorOfCommands {
             if (cmd.equals("execute_script") || cmd.equals("exit") ){
                 command.execute();
                 return null;
+            }
+            if (!(command instanceof AuthorizationCommand) && !AuthorizationManager.checkAuth()){
+                throw new NoAuthorizationException("Вы не авторизованы. Введите login или register");
             }
             return command;
         }

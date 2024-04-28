@@ -1,7 +1,9 @@
 package org.common.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -9,18 +11,34 @@ import java.util.Date;
 /**
  * a class for storing ticket data
  */
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name = "ticket",schema = "s409397")
 public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serializable {
     @Serial
     private static final long serialVersionUID = "Ticket".hashCode();
+    @Id
+    Long id;
     private String name; //Поле не может быть null, Строка не может быть пустой
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "coordinates_id")
     private Coordinates coordinates; //Поле не может быть null
+    @Column(name = "creation_date")
     private Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Long price; //Поле не может быть null, Значение поля должно быть больше 0
     private Long discount; //Поле может быть null, Значение поля должно быть больше 0, Максимальное значение поля: 100
     private Boolean refundable; //Поле может быть null
-    private TicketType type; //Поле не может быть null
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ticket_type")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Basic(optional=false)
+    private TicketType ticketType; //Поле не может быть null
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "venue_id")
     private Venue venue; //Поле не может быть null
     //конструктор без даты и id
     public Ticket(String name,Coordinates coordinates,Long price,Long discount,Boolean refundable,TicketType type,Venue venue){
@@ -31,9 +49,9 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
         this.price=price;
         this.discount = discount;
         this.refundable = refundable;
-        this.type = type;
+        this.ticketType = type;
         this.venue=venue;
-        addToInstance(this);
+
     }
     //конструктор без даты но с id
     public Ticket(Long id, String name,Coordinates coordinates,Long price,Long discount,Boolean refundable,TicketType type,Venue venue){
@@ -45,9 +63,8 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
         this.price=price;
         this.discount = discount;
         this.refundable = refundable;
-        this.type = type;
+        this.ticketType = type;
         this.venue=venue;
-        addToInstance(this);
     }
 
     //конструктор с датой и id
@@ -60,9 +77,8 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
         this.price=price;
         this.discount = discount;
         this.refundable = refundable;
-        this.type = type;
+        this.ticketType = type;
         this.venue=venue;
-        addToInstance(this);
     }
 
 
@@ -85,7 +101,7 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
                 ", price " +price+
                 ", discount " +discount+
                 ", refundable " +refundable+
-                ", ticketType "+type+
+                ", ticketType "+ ticketType +
                 ", venue " + venue.toString();
     }
 }

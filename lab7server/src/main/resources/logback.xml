@@ -1,4 +1,7 @@
 <configuration>
+    <property name="loggerBinder" value="ch.qos.logback.classic.util.ContextSelectorStaticBinder"/>
+    <logger name="org.hibernate" level="ERROR"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- Вывод на консоль -->
         <encoder>
@@ -11,7 +14,7 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <root level="TRACE">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>

@@ -19,15 +19,15 @@ public class Help extends Command implements Serializable {
             try (Scanner scanner = new Scanner(inputStream)) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
-                    console.addToSend(line,getAddress());
+                    responseManager.addToSend(line,this);
                 }
             } catch (Exception e) {
-                console.addToSend("Ошибка при чтении файла: " + e.getMessage(),getAddress());
+                responseManager.addToSend("Ошибка при чтении файла: " + e.getMessage(),this);
             }
         } else {
-            console.addToSend("Файл help.txt не найден",getAddress());
+            responseManager.addToSend("Файл help.txt не найден",this);
         }
-        console.send(getAddress());
+        responseManager.send(this);
     }
 
     @Override

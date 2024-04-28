@@ -27,12 +27,12 @@ public class FilterLessThanVenue extends Command implements Serializable {
             Long capacity= Long.parseLong(capacityStr);
             List<Ticket> filtered = collection.filterLessThanVenue(capacity);
             if (filtered.isEmpty()){
-                console.addToSend("Нет таких элементов",getAddress());
+                responseManager.addToSend("Нет таких элементов",this);
             }
             for (Ticket ticket : filtered){
-                console.addToSend(ticket.toString(),getAddress());
+                responseManager.addToSend(ticket.toString(),this);
             }
-        console.send(getAddress());
+        responseManager.send(this);
 
     }
 
@@ -40,7 +40,7 @@ public class FilterLessThanVenue extends Command implements Serializable {
     public void validate(String arg1) {
         this.stringArg = arg1;
         if (!Validator.validate(arg1, TypesOfArgs.Long,false) || Long.parseLong(stringArg)<=0){
-            throw new InvalidFormatException("Id должен быть числом > 0",getAddress());
+            throw new InvalidFormatException("Id должен быть числом > 0",this);
         }
     }
 }

@@ -16,13 +16,13 @@ public class Show extends Command implements Serializable {
     @Override
     public void execute() {
         if (collection.getHashMap().isEmpty()) {
-            console.addToSend("Коллекция пуста",getAddress());
+            responseManager.addToSend("Коллекция пуста",this);
         } else {
             collection.getHashMap().values().stream()
                     .sorted()
-                    .forEach(ticket -> console.addToSend(ticket.toString(),getAddress()) );
+                    .forEach(ticket -> responseManager.addToSend(ticket.toString(),this) );
         }
-        console.send(getAddress());
+        responseManager.send(this);
     }
 
     @Override

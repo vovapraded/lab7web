@@ -3,10 +3,13 @@ package org.example.connection;
 import com.google.common.primitives.Bytes;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.common.commands.Command;
+import org.common.network.Response;
+import org.common.serial.SerializeException;
+import org.common.serial.Serializer;
 import org.common.utility.PropertyUtil;
 import org.example.managers.ExecutorOfCommands;
-import org.example.utility.Deserializer;
-import org.example.utility.RecieveDataException;
+import org.common.serial.Deserializer;
+import org.example.utility.ReceiveDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,11 +54,13 @@ public class UdpServer implements ResponseListener {
             throw new RuntimeException(e);
         }
     }
-    public void run() throws RecieveDataException, SocketException {
+    public void run() throws ReceiveDataException, SocketException {
 
         while (running) {
                 var commandAndAddr = receiveData();
-                executor.executeCommand(commandAndAddr);
+                var command = commandAndAddr.getLeft();
+                var address = commandAndAddr.getRight();
+                executor.executeCommand(command,address);
         }
     }
 //    public void connectToClient(SocketAddress addr) throws SocketException {
@@ -70,7 +75,7 @@ public class UdpServer implements ResponseListener {
 
 
 
-    public ImmutablePair receiveData() throws RecieveDataException {
+    public ImmutablePair<Command,SocketAddress> receiveData() throws ReceiveDataException {
         var received = false;
         var result = new byte[0];
         SocketAddress addr = null;
@@ -85,7 +90,7 @@ public class UdpServer implements ResponseListener {
                     continue;
                 }
             } catch (IOException e) {
-                throw new RecieveDataException("Не удалось получить данные, адрес клиента: " + addr);
+                throw new ReceiveDataException("Не удалось получить данные, адрес клиента: " + addr);
             }
             var data = buffer.array();
             if (data[data.length-1] == 3 || data[data.length-1] == 1){
@@ -117,9 +122,9 @@ public class UdpServer implements ResponseListener {
 
         }
         clients.remove(addr);
-        Command command = Deserializer.deserialize(result);
+        Command command =  Deserializer.deserialize(result, Command.class);
         logger.debug("Команда "+command.getClass().getName()+" десериализованна успешно");
-        return new ImmutablePair<>(command, addr);
+        return new ImmutablePair<Command,SocketAddress>(command, addr);
     }
 
     private void sendData(byte[] data, SocketAddress address) throws IOException {
@@ -146,11 +151,14 @@ public class UdpServer implements ResponseListener {
 
 
     @Override
-    public void onResponse(byte[] data, SocketAddress address) {
+    public void onResponse(Response response, SocketAddress address) {
         try {
-            sendData(data,address);
+            sendData(Serializer.serialize(response),address);
+            logger.debug("Респонс отправлен по адрессу "+address);
         } catch (IOException e) {
             logger.error("Не получилось отправить ответ клиенту: "+address);
+        }catch (SerializeException e){
+            logger.error("Не получилось сериализовать ответ клиенту: "+address);
         }
     }
 }

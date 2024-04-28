@@ -1,6 +1,10 @@
 package org.common.managers;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.common.dao.interfaces.CollectionInDatabaseManager;
 import org.common.dto.Ticket;
+import org.common.dto.Venue;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,38 +22,56 @@ import java.util.stream.Collectors;
     private static final Collection INSTANCE= new Collection();
     private Date currentDate;
     private HashMap<Long,Ticket> hashMap = new HashMap<>();
+    @Setter @Getter
+    private   CollectionInDatabaseManager ticketDao;
 
 
     private Collection(){
         currentDate = new Date();
     }
     public void clearCollection(){
+        ticketDao.clear();
         hashMap.clear();
     }
     public void insertElement(Ticket ticket){
+        ticketDao.insert(ticket);
         hashMap.put(ticket.getId(),ticket);
-        Ticket.addToInstance(ticket);
+
+    }
+    public void updateTicket(Ticket ticket){
+        ticketDao.update(ticket);
+        hashMap.put(ticket.getId(),ticket);
+    }
+    public ArrayList<Venue> getAllVenue(){
+        return (ArrayList<Venue>) hashMap.values().stream().map(Ticket::getVenue).collect(Collectors.toList());
     }
     public void addHashMap(HashMap<Long,Ticket> anotherHashMap){
+
         hashMap.putAll(anotherHashMap);
     }
-    public Long getFreeId(){
-        Long maxId = hashMap.keySet().stream().max(Long::compare).orElse(0L);
-        return maxId+1L;
-    }
+
 
     public Ticket getElement(Long id) {
         return hashMap.get(id);
     }
     public  void removeElement(Long id){
+        ticketDao.removeTicket(hashMap.get(id));
         hashMap.remove(id);
     }
+    public  void removeElement(Ticket ticket){
+        ticketDao.removeTicket(ticket);
+        hashMap.remove(ticket.getId());
+    }
     public void removeGreater(Ticket ourTicket) {
-        hashMap.values().removeIf(ticket -> ticket.compareTo(ourTicket) > 0);
+        hashMap.values().stream()
+                .filter(ticket -> ticket.getPrice() > ourTicket.getPrice())
+                .forEach(this::removeElement);
     }
 
     public void removeGreaterKey(Long id) {
-        hashMap.values().removeIf(ticket -> ticket.getId() > id);
+        hashMap.values().stream()
+                .filter(ticket -> ticket.getId() > id)
+                .peek(this::removeElement);
     }
 
     public OptionalDouble getAveragePrice(){

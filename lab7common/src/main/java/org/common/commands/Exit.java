@@ -13,8 +13,7 @@ public class Exit extends Command implements Serializable {
 
     @Override
     public void execute() {
-        console.addToSend("Завершение работы",getAddress());
-        console.send(getAddress());
+        console.print("Завершение работы");
         System.exit(0);
     }
 
