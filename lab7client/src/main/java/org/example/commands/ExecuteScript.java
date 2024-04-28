@@ -1,4 +1,5 @@
-package org.common.commands;
+package org.example.commands;
+import org.common.commands.Command;
 import org.common.utility.InvalidFormatException;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 /**
  * The command to execute a script from a file
  */
-public class ExecuteScript extends Command implements Serializable {
+public class ExecuteScript extends Command implements Serializable,ClientCommand{
     @Serial
     private static final long serialVersionUID = "Clear".hashCode();
     private static ArrayList<File> stack = new ArrayList<>();

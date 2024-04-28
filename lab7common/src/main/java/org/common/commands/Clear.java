@@ -13,8 +13,8 @@ public class Clear extends Command implements Serializable {
 
     @Override
     public void execute() {
-        collection.clearCollection();
-        responseManager.addToSend("Коллекция очищена",this);
+        collection.clearCollection(getAuthorization().getLogin());
+        responseManager.addToSend("Коллекция пользователя "+getAuthorization().getLogin()+" очищена",this);
         responseManager.send(this);
     }
 

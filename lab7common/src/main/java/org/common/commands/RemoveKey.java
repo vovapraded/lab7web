@@ -24,7 +24,7 @@ public class RemoveKey extends Command implements Serializable {
             e.setCommand(this);
             throw e;
         }
-        collection.removeElement(id);
+        collection.removeElement(id,getAuthorization().getLogin());
         responseManager.addToSend("Элемент удалён",this);
         responseManager.send(this);
 

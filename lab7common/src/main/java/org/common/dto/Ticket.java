@@ -24,7 +24,7 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
     @Id
     Long id;
     private String name; //Поле не может быть null, Строка не может быть пустой
-    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coordinates_id")
     private Coordinates coordinates; //Поле не может быть null
     @Column(name = "creation_date")
@@ -37,11 +37,11 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Basic(optional=false)
     private TicketType ticketType; //Поле не может быть null
-    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "venue_id")
     private Venue venue; //Поле не может быть null
     @Column(name = "created_by")
-    private transient String createdBy; //Поле не может быть null, Строка не может быть пустой
+    private  String createdBy; //Поле не может быть null, Строка не может быть пустой
 
     //конструктор без даты и id
 
@@ -106,6 +106,7 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
                 ", discount " +discount+
                 ", refundable " +refundable+
                 ", ticketType "+ ticketType +
-                ", venue " + venue.toString();
+                ", venue " + venue.toString()+
+                ", created by " + createdBy;
     }
 }

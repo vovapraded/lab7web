@@ -27,7 +27,7 @@ public class RemoveGreaterKey extends Command implements  Serializable {
             throw e;
         }
         long sizeBefore = collection.getCountOfElements();
-            collection.removeGreaterKey(id);
+            collection.removeGreaterKey(id,getAuthorization().getLogin());
             long sizeAfter = collection.getCountOfElements();
             if (sizeAfter != sizeBefore) {
                 responseManager.addToSend("Успешно удалено",this);

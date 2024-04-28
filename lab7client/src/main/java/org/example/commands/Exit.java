@@ -1,4 +1,6 @@
-package org.common.commands;
+package org.example.commands;
+
+import org.common.commands.Command;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -6,7 +8,7 @@ import java.io.Serializable;
 /**
  * The shutdown command
  */
-public class Exit extends Command implements Serializable {
+public class Exit extends Command implements Serializable,ClientCommand {
     @Serial
     private static final long serialVersionUID = "Exit".hashCode();
 

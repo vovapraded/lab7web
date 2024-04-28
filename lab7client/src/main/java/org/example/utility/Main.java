@@ -18,20 +18,12 @@ import org.common.utility.*;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        UdpClient udpClient = new UdpClient();
+        UdpClient udpClient =  UdpClient.getInstance();
         CurrentConsole currentConsole = CurrentConsole.getInstance();
         CreatorOfCommands creator = new CreatorOfCommands();
         ParseInput parseInput = new ParseInput();
         while (true) {
             String s = currentConsole.getInput();
-            if (s.equals("\\")) {
-                try {
-                    currentConsole.print(udpClient.getResponse(true).getMessageBySingleString());
-                }catch (NoResponseException e){
-                    currentConsole.print(e.getMessage());
-                }
-                continue;
-            }
             if (!s.isEmpty()) {
                 try {
                     parseInput.parseInput(s);
@@ -41,19 +33,17 @@ public class Main {
                         throw new InvalidFormatException("Слишком много аргументов");
                     }
                    var command = creator.createCommand(cmd, arg2);
-
-                   if (command==null){
-                       continue;
-                   }
-                    try {
-                        udpClient.sendCommand(command);
-                        var resp = udpClient.getResponse(false);
-                        if (!resp.isPasswordCorrect() || !resp.isLoginCorrect()){
-                            AuthorizationManager.resetAuth();
+                    if (command!= null) {
+                        try {
+                            udpClient.sendCommand(command);
+                            var resp = udpClient.getResponse(false);
+                            if (!resp.isPasswordCorrect() || !resp.isLoginCorrect()) {
+                                AuthorizationManager.resetAuth();
+                            }
+                            currentConsole.print(resp.getMessageBySingleString());
+                        } catch (NoResponseException | SendException | SerializeException | DeserializeException e) {
+                            currentConsole.print(e.getMessage());
                         }
-                        currentConsole.print(resp.getMessageBySingleString());
-                    }catch (NoResponseException | SendException | SerializeException | DeserializeException e) {
-                        currentConsole.print(e.getMessage());
                     }
 
                 } catch (InvalidFormatException | NoAuthorizationException e) {

@@ -1,11 +1,8 @@
 package org.example.utility;
 
-import org.common.managers.ResponseManager;
 import org.example.dao.TicketDao;
 import org.common.managers.Collection;
 import org.example.dao.UserDao;
-import org.example.managers.HibernateManager;
-import org.common.utility.Console;
 import org.common.utility.InvalidFormatException;
 import org.example.connection.ResponsePublisher;
 import org.example.connection.UdpServer;
@@ -13,8 +10,6 @@ import org.example.managers.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.SocketException;
 
 
 /**

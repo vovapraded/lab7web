@@ -2,6 +2,7 @@ package org.common.managers;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.common.commands.authorization.NoAccessException;
 import org.common.dao.interfaces.CollectionInDatabaseManager;
 import org.common.dto.Ticket;
 import org.common.dto.Venue;
@@ -29,17 +30,17 @@ import java.util.stream.Collectors;
     private Collection(){
         currentDate = new Date();
     }
-    public void clearCollection(){
-        ticketDao.clear();
-        hashMap.clear();
+    public void clearCollection(String login){
+        ticketDao.clear(login);
+        hashMap.values().removeIf(ticket -> ticket.getCreatedBy().equals(login));
     }
     public void insertElement(Ticket ticket){
         ticketDao.insert(ticket);
         hashMap.put(ticket.getId(),ticket);
 
     }
-    public void updateTicket(Ticket ticket){
-        ticketDao.update(ticket);
+    public void updateTicket(Ticket ticket,String login){
+        ticketDao.update(ticket,login);
         hashMap.put(ticket.getId(),ticket);
     }
     public ArrayList<Venue> getAllVenue(){
@@ -54,29 +55,32 @@ import java.util.stream.Collectors;
     public Ticket getElement(Long id) {
         return hashMap.get(id);
     }
-    public  void removeElement(Long id){
-        ticketDao.removeTicket(hashMap.get(id));
+    public  void removeElement(Long id,String login) throws NoAccessException {
+        ticketDao.removeTicket(id,login);
         hashMap.remove(id);
     }
     public  void removeElement(Ticket ticket){
-        ticketDao.removeTicket(ticket);
-        hashMap.remove(ticket.getId());
+            ticketDao.removeTicket(ticket);
+            hashMap.remove(ticket.getId());
+
     }
-    public void removeGreater(Ticket ourTicket) {
-        hashMap.values().stream()
-                .filter(ticket -> ticket.getPrice() > ourTicket.getPrice())
-                .forEach(this::removeElement);
+    public void removeGreater(Ticket ourTicket,String login) {
+        List<Ticket> ticketsToRemove = hashMap.values().stream()
+                .filter(ticket -> ticket.getPrice() > ourTicket.getPrice() && ticket.getCreatedBy().equals(login))
+                .toList();
+        ticketsToRemove.forEach(ticket -> removeElement(ticket));
     }
 
-    public void removeGreaterKey(Long id) {
-        hashMap.values().stream()
-                .filter(ticket -> ticket.getId() > id)
-                .peek(this::removeElement);
+    public void removeGreaterKey(Long id,String login) {
+        List<Ticket> ticketsToRemove = hashMap.values().stream()
+                .filter(ticket -> ticket.getId() > id && ticket.getCreatedBy().equals(login))
+                .toList();
+        ticketsToRemove.forEach(ticket -> removeElement(ticket));
     }
 
     public OptionalDouble getAveragePrice(){
         OptionalDouble average = hashMap.values().stream()
-                .map(ticket -> ticket.getId())
+                .map(ticket -> ticket.getPrice())
                 .mapToLong(Long::longValue)
                 .average();
         return average;

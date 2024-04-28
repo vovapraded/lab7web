@@ -1,4 +1,8 @@
 package org.example.connection;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Singular;
 import org.common.commands.Command;
 import org.common.network.Response;
 import org.common.network.SendException;
@@ -21,19 +25,22 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.common.primitives.Bytes;
-
-
 public class UdpClient  {
     private final int PACKET_SIZE = 1024;
     private final int DATA_SIZE = PACKET_SIZE - 1;
     private final CurrentConsole currentConsole = CurrentConsole.getInstance();
 private DatagramChannel client;
-    private final InetSocketAddress serverSocketAddress;
+    private UdpClient(){
+    }
+    @Getter
+    private static UdpClient instance = new UdpClient();
     private final InetAddress serverAddress;
+
+
+    private final InetSocketAddress serverSocketAddress;
 
     private final int serverPort = PropertyUtil.getPort();
     private  SocketAddress clientAddress;
-
     {
         try {
             serverAddress = InetAddress.getByName(PropertyUtil.getAddress());
@@ -41,9 +48,6 @@ private DatagramChannel client;
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public UdpClient()  {
         currentConsole.print("Пытаемся открыть канал для соединения с сервером");
         boolean channelIsOpen = false;
         int i = 0;

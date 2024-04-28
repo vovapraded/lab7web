@@ -3,6 +3,7 @@ package org.example.dao;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.Cleanup;
+import org.common.commands.authorization.NoAccessException;
 import org.common.dao.interfaces.CollectionInDatabaseManager;
 import org.common.dto.Ticket;
 import org.example.managers.HibernateManager;
@@ -11,9 +12,7 @@ import org.hibernate.SessionFactory;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import static org.common.dto.QCoordinates.coordinates;
 import static org.common.dto.QTicket.ticket;
-import static org.common.dto.QVenue.venue;
 
 public class TicketDao implements CollectionInDatabaseManager {
     private final SessionFactory sessionFactory;
@@ -41,16 +40,12 @@ public class TicketDao implements CollectionInDatabaseManager {
     }
 
     @Override
-    public void clear() {
+    public void clear(String login) {
         @Cleanup var session = sessionFactory.openSession();
         session.beginTransaction();
         new JPADeleteClause(session,ticket)
+                .where(ticket.createdBy.eq(login))
                 .execute();
-        new JPADeleteClause(session, venue)
-                .execute();
-        new JPADeleteClause(session, coordinates)
-                .execute();
-
         session.getTransaction().commit();
     }
 
@@ -62,27 +57,33 @@ public class TicketDao implements CollectionInDatabaseManager {
         session.getTransaction().commit();
     }
     @Override
-    public void update(Ticket newTicket) {
-        removeTicket(newTicket.getId());
+    public void update(Ticket newTicket, String login) {
+        removeTicket(newTicket.getId(),login);
         insert(newTicket);
     }
     @Override
-    public void removeTicket(Ticket ticket) {
+    public void removeTicket(Ticket tick) {
         @Cleanup var session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.remove(ticket);
-        session.getTransaction().commit();
+            session.beginTransaction();
+        new JPADeleteClause(session,ticket)
+                .where(ticket.id.eq(tick.getId()))
+                .execute();
+            session.getTransaction().commit();
     }
     @Override
-    public void removeTicket(Long id) {
+    public void removeTicket(Long id, String login) throws NoAccessException {
         @Cleanup var session = sessionFactory.openSession();
         session.beginTransaction();
         var tick = new JPAQuery<Ticket>(session)
                 .select(ticket)
                 .from(ticket)
-                .where(ticket.id.eq(id))
+                .where(ticket.id.eq(id).and(ticket.createdBy.eq(login)))
                 .fetchOne();
-        session.remove(tick);
+        if (tick == null) throw new NoAccessException("Нет доступа");
+
+        new JPADeleteClause(session,ticket)
+                .where(ticket.id.eq(tick.getId()))
+                .execute();
         session.getTransaction().commit();
     }
 

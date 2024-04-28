@@ -20,7 +20,8 @@ public class RemoveGreater extends Command implements Serializable {
     @Override
     public void execute() {
             Ticket ticket = ticketArg;
-            collection.removeGreater(ticket);
+            ticketArg.setCreatedBy(getAuthorization().getLogin());
+            collection.removeGreater(ticket,getAuthorization().getLogin());
             responseManager.addToSend("Операция прошла успешно",this);
         responseManager.send(this);
 

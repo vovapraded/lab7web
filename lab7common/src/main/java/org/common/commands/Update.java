@@ -27,8 +27,9 @@ public class Update extends Command implements Serializable {
             throw e;
         }
         ticketArg.setId(id);
+        ticketArg.setCreatedBy(getAuthorization().getLogin());
         ticketArg.setCreationDate(new Date());
-        collection.updateTicket(ticketArg);
+        collection.updateTicket(ticketArg, getAuthorization().getLogin());
         responseManager.addToSend("Билет успешно введён",this);
         responseManager.send(this);
 

@@ -7,6 +7,7 @@ import org.common.network.Response;
 import org.common.utility.InvalidFormatException;
 import org.example.authorization.AuthorizationException;
 import org.example.authorization.AuthorizationManager;
+import org.common.commands.authorization.NoAccessException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,10 @@ public class ExecutorOfCommands {
             command.execute();
         }catch (AuthorizationException e){
             logger.debug("Пользователь "+command.getAuthorization().getLogin()+ " не авторизован");
+            responseManager.addToSend(e.getMessage(),command);
+            responseManager.send(command);
+        }catch (NoAccessException e){
+            logger.debug("Нет доступа до удаления "+command.getAuthorization().getLogin()+ " не авторизован");
             responseManager.addToSend(e.getMessage(),command);
             responseManager.send(command);
         }

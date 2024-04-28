@@ -26,12 +26,12 @@ public class ReplaceIfGreater extends Command implements Serializable {
         Long id = Long.parseLong(idStr);
         Ticket oldTicket = collection.getElement(id);
         Ticket newTicket = ticketArg ;
-
+        ticketArg.setCreatedBy(getAuthorization().getLogin());
         if (newTicket.compareTo(oldTicket)>0){
-            responseManager.addToSend("Операция прошла успешно. Замена произошла",this);
-            collection.removeElement(id);
+            collection.removeElement(id,getAuthorization().getLogin());
             newTicket.setId(id);
             collection.insertElement(newTicket);
+            responseManager.addToSend("Операция прошла успешно. Замена произошла",this);
         }
         else {
             responseManager.addToSend("Операция прошла успешно. Замена не произошла",this);
