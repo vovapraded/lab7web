@@ -1,5 +1,6 @@
 package org.example.utility;
 
+import org.example.connection.PacketReceiver;
 import org.example.dao.TicketDao;
 import org.common.managers.Collection;
 import org.example.dao.UserDao;
@@ -23,7 +24,7 @@ public class Main {
             try {
                 UserDao userDao = new UserDao();
                 userDao.getPasswordAndSaltByLogin("d");
-            logger.debug("Сервер запускается");
+                logger.debug("Сервер запускается");
                 CurrentResponseManager responseManager = new CurrentResponseManager();
                 TicketDao dao = new TicketDao();
                 Collection collection = Collection.getInstance();
@@ -33,19 +34,9 @@ public class Main {
 
 
 
-                UdpServer udpServer = new UdpServer(new ExecutorOfCommands(responseManager));
-                ResponsePublisher.addListener(udpServer);
+                UdpServer udpServer = new UdpServer(responseManager);
 
-                while (true) {
-                    try {
-                        udpServer.run();
-                    } catch (InvalidFormatException e) {
-                        responseManager.addToSend(e.getMessage(), e.getCommand());
-                        responseManager.send(e.getCommand());
-                    } catch (ReceiveDataException e) {
-                        logger.error(e.getMessage());
-                    }
-                }
+                ResponsePublisher.addListener(udpServer);
             }catch (Exception e){
                 logger.error("Ошибка: "+e.getClass()+" сообщение об ошибке: "+e.getMessage()+" причина ошибки: "+ e.getCause());
                 e.printStackTrace();

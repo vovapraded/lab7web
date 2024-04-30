@@ -32,7 +32,7 @@ public class CurrentConsole implements Console {
     @Override
     public void printHello(){
         print("Добро пожаловать!\n" +
-                "Введите help для вывода инструкции");
+                "Введите login или register для авторизации");
     }
 
 @Override

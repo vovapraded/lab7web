@@ -33,6 +33,7 @@ public class Insert extends Command implements Serializable {
         ticketArg.setCreationDate(new Date());
         collection.insertElement(ticketArg);
         responseManager.addToSend("Билет успешно введён",this);
+        loggerHelper.debug("Команда "+this.getClass().getName()+"от адресса "+responseManager.getResponse(this).getAddress() +" выполнена");
         responseManager.send(this);
     }
 

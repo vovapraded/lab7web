@@ -58,6 +58,9 @@ public class CreatorOfCommands {
             }
 
             var command=commands.get(cmd);
+            if (!(command instanceof AuthorizationCommand) && !AuthorizationManager.checkAuth()){
+                throw new NoAuthorizationException("Вы не авторизованы. Введите login или register");
+            }
             command.setConsole(currentConsole);
             if (command instanceof ClientCommand){
                 command.execute();
@@ -68,9 +71,7 @@ public class CreatorOfCommands {
             command.prepareToSend(Commands.valueOf(cmd).isTicketArgIsNeeded());
 
 
-            if (!(command instanceof AuthorizationCommand) && !AuthorizationManager.checkAuth()){
-                throw new NoAuthorizationException("Вы не авторизованы. Введите login или register");
-            }
+
             return command;
         }
         else {

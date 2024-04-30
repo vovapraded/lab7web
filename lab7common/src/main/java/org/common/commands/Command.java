@@ -3,6 +3,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.common.commands.authorization.AuthorizationCommand;
 import org.common.commands.inner.objects.Authorization;
+import org.common.commands.inner.objects.LoggerHelper;
 import org.common.dto.Ticket;
 import org.common.managers.Collection;
 import org.common.managers.*;
@@ -20,7 +21,7 @@ import java.net.SocketAddress;
 public abstract class Command implements Serializable {
     @Serial
     private static final long serialVersionUID = "Command".hashCode();
-
+    protected LoggerHelper loggerHelper;
     protected Command() {
 
     }

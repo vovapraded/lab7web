@@ -1,8 +1,7 @@
 package org.example.connection;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.common.commands.Command;
 import org.common.network.Response;
 import org.common.network.SendException;
@@ -20,9 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import com.google.common.primitives.Bytes;
 public class UdpClient  {
@@ -85,20 +82,21 @@ private DatagramChannel client;
     public void sendData(byte[] data) throws IOException {
         byte[][] packets=new byte[(int)Math.ceil(data.length / (double)DATA_SIZE)][PACKET_SIZE];
         for (int i = 0; i<packets.length;i++){
-            byte k = 0;
-            if (i == 0){
-                k+=1;
-            }
+
             if (i == packets.length - 1) {
-                k +=2;
+                packets[i] = Bytes.concat(Arrays.copyOfRange(data,i*DATA_SIZE,(i+1)*DATA_SIZE), new byte[]{(byte) -(i+1)});
             }
-            packets[i] = Bytes.concat(Arrays.copyOfRange(data,i*DATA_SIZE,(i+1)*DATA_SIZE), new byte[]{k});
+            else {
+                packets[i] = Bytes.concat(Arrays.copyOfRange(data, i * DATA_SIZE, (i + 1) * DATA_SIZE), new byte[]{(byte) (i + 1)});
+            }
 
         }
-
         for (byte[] packet : packets) {
             ByteBuffer buffer = ByteBuffer.wrap(packet);
             client.send(buffer, serverSocketAddress);
+            System.out.println("Пакет отправлен");
+
+
         }
    }
 
@@ -136,7 +134,8 @@ private DatagramChannel client;
 
     private byte[] receiveData(boolean isOnce) throws NoResponseException {
         var received = false;
-        var result = new byte[0];
+        var result = new ArrayList();
+        var sizeOfResponse = Byte.MAX_VALUE;
         while (!received) {
             byte[] data = new byte[0];
             try {
@@ -148,16 +147,27 @@ private DatagramChannel client;
                 if (data.length == 0) {
                     throw new NoResponseException("Ответ пустой");
                 }
-                if (data[data.length - 1] == 1) {
-                    received = true;
+            var lastChunk = data[data.length - 1];
+            data = Arrays.copyOf(data, data.length - 1);
+            if (lastChunk < 0) {
+                    sizeOfResponse = (byte) -lastChunk;
                 }
-                result = Bytes.concat(result, Arrays.copyOf(data, data.length - 1));
+            result.add(new ImmutablePair<byte[], Byte>(data, (byte) Math.abs(lastChunk)));
+            if (result.size() == sizeOfResponse){
+                received = true;
             }
-            return result;
         }
+        return sortPackets(result);
+    }
+    private byte[] sortPackets(ArrayList<ImmutablePair<byte[],Byte>> result)  {
+        result.sort(Comparator.comparing(pair -> pair.getRight()));
+        var response = result.stream().map((pair) -> pair.getLeft()).reduce(new byte[0], (arr1, arr2) ->
+            Bytes.concat(arr1, arr2));
+        return response;
+    }
 
 
-    public Response getResponse(boolean isOnce) throws  NoResponseException, DeserializeException {
+        public Response getResponse(boolean isOnce) throws  NoResponseException, DeserializeException {
          return Deserializer.deserialize(receiveData(isOnce), Response.class);
     }
 

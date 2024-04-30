@@ -36,6 +36,7 @@ public class ReplaceIfGreater extends Command implements Serializable {
         else {
             responseManager.addToSend("Операция прошла успешно. Замена не произошла",this);
         }
+        loggerHelper.debug("Команда "+this.getClass().getName()+"от адресса "+responseManager.getResponse(this).getAddress() +" выполнена");
         responseManager.send(this);
 
     }

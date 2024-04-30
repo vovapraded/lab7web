@@ -8,6 +8,7 @@ import org.common.dto.Ticket;
 import org.common.dto.Venue;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
     private static final Collection INSTANCE= new Collection();
     private Date currentDate;
-    private HashMap<Long,Ticket> hashMap = new HashMap<>();
+    private ConcurrentHashMap<Long,Ticket> hashMap = new ConcurrentHashMap<>();
     @Setter @Getter
     private   CollectionInDatabaseManager ticketDao;
 
@@ -92,7 +93,7 @@ import java.util.stream.Collectors;
         return filtered;
     }
 
-    public HashMap<Long, Ticket>  getHashMap() {
+    public ConcurrentHashMap<Long, Ticket>  getHashMap() {
         return hashMap;
     }
 

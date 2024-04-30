@@ -34,6 +34,7 @@ public class RemoveGreaterKey extends Command implements  Serializable {
             }else {
                 responseManager.addToSend("Нет таких элементов",this);
             }
+        loggerHelper.debug("Команда "+this.getClass().getName()+"от адресса "+responseManager.getResponse(this).getAddress() +" выполнена");
         responseManager.send(this);
 
 

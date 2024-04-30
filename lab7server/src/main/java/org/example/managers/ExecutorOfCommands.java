@@ -8,6 +8,7 @@ import org.common.utility.InvalidFormatException;
 import org.example.authorization.AuthorizationException;
 import org.example.authorization.AuthorizationManager;
 import org.common.commands.authorization.NoAccessException;
+import org.example.utility.CurrentLoggerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,19 +18,32 @@ import java.net.SocketAddress;
 /**
  * A class for executing commands
  */
-public class ExecutorOfCommands {
+public class ExecutorOfCommands extends Thread{
 
 
-
+    private final CurrentLoggerHelper loggerHelper = new CurrentLoggerHelper();
     private final Collection collection = Collection.getInstance();
     private  final CurrentResponseManager responseManager;
     private static final Logger logger = LoggerFactory.getLogger(ExecutorOfCommands.class);
+    private final Command command;
+    private final SocketAddress address;
 
-
-    public ExecutorOfCommands( CurrentResponseManager responseManager){
+    public ExecutorOfCommands(Command command, SocketAddress address, CurrentResponseManager responseManager){
         this.responseManager = responseManager;
+        this.command = command;
+        this.address = address;
     }
+public void run(){
+     try {
+         executeCommand(command,address);
+     } catch (InvalidFormatException e) {
+         responseManager.addToSend(e.getMessage(), e.getCommand());
+         responseManager.send(e.getCommand());
+     }finally {
+         logger.debug("Команда "+ command.getClass().getName()+" с адресса "+address+" выполнена");
+     }
 
+}
     public boolean isRegisterCommand(Command command){
         if (command instanceof Register) return true;
         else return false;
@@ -48,6 +62,7 @@ public class ExecutorOfCommands {
 //    }
     public void executeCommand(Command command,SocketAddress address) throws InvalidFormatException {
         command.setResponseManager(responseManager);
+        command.setLoggerHelper(loggerHelper);
         try {
             if (isRegisterCommand(command)) {
                 checkAuthRegisterCommand(command, address);

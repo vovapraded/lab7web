@@ -27,6 +27,7 @@ public class Help extends Command implements Serializable {
         } else {
             responseManager.addToSend("Файл help.txt не найден",this);
         }
+        loggerHelper.debug("Команда "+this.getClass().getName()+"от адресса "+responseManager.getResponse(this).getAddress() +" выполнена");
         responseManager.send(this);
     }
 
