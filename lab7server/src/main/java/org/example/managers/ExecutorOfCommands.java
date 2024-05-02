@@ -8,6 +8,7 @@ import org.common.utility.InvalidFormatException;
 import org.example.authorization.AuthorizationException;
 import org.example.authorization.AuthorizationManager;
 import org.common.commands.authorization.NoAccessException;
+import org.example.dao.FailedTransactionException;
 import org.example.utility.CurrentLoggerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -48,14 +49,20 @@ public void run(){
         if (command instanceof Register) return true;
         else return false;
     }
-    public boolean checkAuthorizationAndGenerateResponse(@NotNull Command command,SocketAddress address){
+    public boolean checkAuthorizationAndGenerateResponse(@NotNull Command command,SocketAddress address) throws AuthorizationException{
         var login=command.getAuthorization().getLogin();
         var password=command.getAuthorization().getPassword();
-        var result  = AuthorizationManager.checkLoginAndPassword(login,password);
-        var loginCorrect = result.getLeft();
-        var passwordCorrect = result.getRight();
-        responseManager.initResponse(command,Response.builder().loginCorrect(loginCorrect).passwordCorrect(passwordCorrect).address(address).build());
-        return loginCorrect & passwordCorrect;
+        try {
+            var result  = AuthorizationManager.checkLoginAndPassword(login,password);
+            var loginCorrect = result.getLeft();
+            var passwordCorrect = result.getRight();
+            responseManager.initResponse(command,Response.builder().loginCorrect(loginCorrect).passwordCorrect(passwordCorrect).address(address).build());
+            return loginCorrect & passwordCorrect;
+        }catch (FailedTransactionException e){
+            throw new AuthorizationException("Произошла ошибка авторизации, попробуйте ещё");
+        }
+
+
     }
 //    public boolean checkAuthorization(Command command)  {
 //
@@ -80,10 +87,15 @@ public void run(){
             responseManager.addToSend(e.getMessage(),command);
             responseManager.send(command);
         }
+        catch (FailedTransactionException e){
+            logger.error("Транзакция команды "+ command.getClass().getName() +" от пользователя "+command.getAuthorization().getLogin()+" завершилась с ошибкой");
+            responseManager.addToSend(e.getMessage(),command);
+            responseManager.send(command);
+        }
 
 
     }
-    public void checkAuthRegisterCommand(Command command, SocketAddress address) throws AuthorizationException {
+    public void checkAuthRegisterCommand(Command command, SocketAddress address) throws FailedTransactionException {
         var response=Response.builder()
                 .address(address)
                 .loginCorrect(false).passwordCorrect(true)
@@ -97,7 +109,7 @@ public void run(){
 
     }
 
-        public void checkAuthCommonCommand(Command command,SocketAddress address) throws AuthorizationException {
+        public void checkAuthCommonCommand(Command command,SocketAddress address) throws AuthorizationException,FailedTransactionException {
             var isAuthorized=checkAuthorizationAndGenerateResponse(command,address);
             if ( !isAuthorized ){
                 logger.debug("Команда "+command.getClass().getName()+" не выполнена, клиент "+responseManager.getResponse(command).getAddress()+" не авторизован");

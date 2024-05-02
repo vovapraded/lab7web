@@ -62,12 +62,13 @@ public class CreatorOfCommands {
                 throw new NoAuthorizationException("Вы не авторизованы. Введите login или register");
             }
             command.setConsole(currentConsole);
+            command.validate(arg1);
             if (command instanceof ClientCommand){
                 command.execute();
                 return null;
             }
             AuthorizationManager.prepareCommand(command);
-            command.validate(arg1);
+
             command.prepareToSend(Commands.valueOf(cmd).isTicketArgIsNeeded());
 
 

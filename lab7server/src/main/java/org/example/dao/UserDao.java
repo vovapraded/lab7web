@@ -21,31 +21,43 @@ public class UserDao {
         sessionFactory = HibernateManager.getConfiguration().buildSessionFactory();
     }
 
-    public ImmutablePair<BigInteger,String> getPasswordAndSaltByLogin(String login){
+    public ImmutablePair<BigInteger,String> getPasswordAndSaltByLogin(String login) throws FailedTransactionException{
         @Cleanup var session = sessionFactory.openSession();
-        session.beginTransaction();
         if (login == null) return null;
-        var hashAndSalt=new JPAQuery<QUser>(session)
-                .select(user.password, user.salt)
-                .from(user)
-                .where(user.login.eq(login))
-                .fetchOne();
-        session.getTransaction().commit();
-        if (hashAndSalt == null) return null;
-        var hash = hashAndSalt.get(0,BigInteger.class);
-        var salt = hashAndSalt.get(1,String.class);
-        return new ImmutablePair<BigInteger,String>(hash,salt);
+        session.beginTransaction();
+        try {
+            var hashAndSalt=new JPAQuery<QUser>(session)
+                    .select(user.password, user.salt)
+                    .from(user)
+                    .where(user.login.eq(login))
+                    .fetchOne();
+            session.getTransaction().commit();
+            if (hashAndSalt == null) return null;
+            var hash = hashAndSalt.get(0,BigInteger.class);
+            var salt = hashAndSalt.get(1,String.class);
+            return new ImmutablePair<BigInteger,String>(hash,salt);
+        }catch (Exception e){
+            session.getTransaction().rollback();
+            throw new FailedTransactionException("Транзакция не удалась");
+        }
+
     }
-    public void insertUser(String login, BigInteger hash, String salt){
+    public void insertUser(String login, BigInteger hash, String salt) throws FailedTransactionException{
         @Cleanup var session = sessionFactory.openSession();
         session.beginTransaction();
-        User user = User.builder()
-                .login(login)
-                .password(hash)
-                .salt(salt)
-                .build();
-        session.save(user);
-        session.getTransaction().commit();
+        try {
+            User user = User.builder()
+                    .login(login)
+                    .password(hash)
+                    .salt(salt)
+                    .build();
+            session.save(user);
+            session.getTransaction().commit();
+        }catch (Exception e){
+            session.getTransaction().rollback();
+            throw new  FailedTransactionException("Транзакция не удалась");
+        }
+
 
     }
 }

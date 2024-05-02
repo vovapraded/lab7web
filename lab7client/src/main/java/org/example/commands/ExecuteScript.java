@@ -14,7 +14,7 @@ import java.util.Scanner;
  */
 public class ExecuteScript extends Command implements Serializable,ClientCommand{
     @Serial
-    private static final long serialVersionUID = "Clear".hashCode();
+    private static final long serialVersionUID = "ExecuteScript".hashCode();
     private static ArrayList<File> stack = new ArrayList<>();
     private static ArrayList<Scanner> stackScanners = new ArrayList<>();
 
@@ -57,6 +57,6 @@ public class ExecuteScript extends Command implements Serializable,ClientCommand
 
     @Override
     public void validate(String arg1) {
-
+        stringArg = arg1;
     }
 }

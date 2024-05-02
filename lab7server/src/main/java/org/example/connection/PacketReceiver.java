@@ -37,9 +37,7 @@ public class PacketReceiver extends Thread {
             var data=receiveData();
             if (data!=null){
                 poolForReceiving.submit(new PacketHandler(responseManager,data));
-
             }
-
         }
     }
     public ImmutablePair<SocketAddress,byte[]> receiveData() throws ReceiveDataException {

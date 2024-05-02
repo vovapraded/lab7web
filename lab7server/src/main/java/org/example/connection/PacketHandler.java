@@ -65,7 +65,8 @@ public class PacketHandler extends Thread {
     }
     private byte[] sortPackets(ArrayList<ImmutablePair<byte[],Byte>> result)  {
         result.sort(Comparator.comparing(pair -> pair.getRight()));
-        var request = result.stream().map((pair) -> pair.getLeft()).reduce(new byte[0], (arr1, arr2) ->
+        var request = result.stream().parallel()
+                .map((pair) -> pair.getLeft()).reduce(new byte[0], (arr1, arr2) ->
                 Bytes.concat(arr1, arr2));
         return request;
     }
