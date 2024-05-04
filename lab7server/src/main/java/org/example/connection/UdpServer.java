@@ -27,7 +27,6 @@ public class UdpServer implements ResponseListener {
     private final InetSocketAddress serverAddress;
 
     private final ByteBuffer buffer = ByteBuffer.allocate(1024);
-    private ConcurrentHashMap<SocketAddress, AbstractMap.SimpleEntry< byte[], Integer>> clients = new ConcurrentHashMap<>();
 
     private final CurrentResponseManager responseManager;
     private final int PACKET_SIZE = 1024;
