@@ -8,11 +8,12 @@ import org.example.entity.QUser;
 import org.example.entity.User;
 import org.example.managers.HibernateManager;
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 
 import static org.example.entity.QUser.*;
-
+@Repository
 public class UserDao {
     private final SessionFactory sessionFactory;
 

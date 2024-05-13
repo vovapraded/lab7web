@@ -1,9 +1,10 @@
 package org.example.managers;
 
-import org.common.utility.ConnectToDatabaseException;
-import org.hibernate.SessionFactory;
+import org.example.utility.ConnectToDatabaseException;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HibernateManager {
     private final  Configuration configuration ;
 

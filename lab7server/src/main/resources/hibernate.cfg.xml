@@ -17,11 +17,11 @@
     <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.connection.isolation">2</property> <!-- Для READ_COMMITTED -->
     <property name="hibernate.physical_naming_strategy">org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl</property>
-    <mapping class="org.common.dto.Coordinates"/>
-    <mapping class="org.common.dto.Ticket"/>
-    <mapping class="org.common.dto.Venue"/>
-    <mapping class="org.common.dto.TicketType"/>
-    <mapping class="org.common.dto.VenueType"/>
+    <mapping class="org.example.entity.Coordinates"/>
+    <mapping class="org.example.entity.Ticket"/>
+    <mapping class="org.example.entity.Venue"/>
+    <mapping class="org.example.entity.TicketType"/>
+    <mapping class="org.example.entity.VenueType"/>
     <mapping class="org.example.entity.User"/>
 
     <!--     DB schema will be updated if needed -->

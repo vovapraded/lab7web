@@ -1,7 +1,6 @@
 package org.example.connection;
 
 import com.google.common.primitives.Bytes;
-import org.common.network.SendException;
 import org.example.threads.ThreadHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

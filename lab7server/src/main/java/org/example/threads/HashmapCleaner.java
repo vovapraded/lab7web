@@ -2,7 +2,6 @@ package org.example.threads;
 
 import lombok.Getter;
 import org.example.connection.PacketHandler;
-import org.example.utility.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

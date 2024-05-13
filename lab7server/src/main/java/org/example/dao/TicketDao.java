@@ -3,18 +3,22 @@ package org.example.dao;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.Cleanup;
-import org.common.commands.authorization.NoAccessException;
-import org.common.dao.interfaces.CollectionInDatabaseManager;
-import org.common.dto.Ticket;
+import org.example.commands.authorization.NoAccessException;
+
+import org.example.entity.Ticket;
 import org.example.managers.HibernateManager;
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import static org.common.dto.QTicket.ticket;
-
-public class TicketDao implements CollectionInDatabaseManager {
+import static org.example.entity.QTicket.ticket;
+@Repository
+public class TicketDao {
     private final SessionFactory sessionFactory;
 
     public TicketDao(HibernateManager hibernateManager) {
@@ -22,7 +26,6 @@ public class TicketDao implements CollectionInDatabaseManager {
         sessionFactory = hibernateManager.getConfiguration().buildSessionFactory();
     }
 
-    @Override
     public HashMap<Long, Ticket> loadCollection() throws FailedTransactionException{
         @Cleanup var session = sessionFactory.openSession();
         session.beginTransaction();
@@ -45,8 +48,24 @@ public class TicketDao implements CollectionInDatabaseManager {
         }
 
     }
+    public List<Ticket> findAll() throws FailedTransactionException{
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+        try {
+            var tickets = new JPAQuery<Ticket>(session)
+                    .select(ticket)
+                    .from(ticket)
+                    .fetch().stream().toList();
+//            session.getTransaction().commit();
+            return  tickets;
+        }
+        catch (Exception e){
+            session.getTransaction().rollback();
+            throw new FailedTransactionException("Транзакция поиска не удалась");
+        }
 
-    @Override
+    }
+
     public void clear(String login) throws FailedTransactionException {
         @Cleanup var session = sessionFactory.openSession();
         session.beginTransaction();
@@ -62,7 +81,6 @@ public class TicketDao implements CollectionInDatabaseManager {
 
     }
 
-    @Override
     public void insert(Ticket ticket) throws FailedTransactionException {
         @Cleanup var session = sessionFactory.openSession();
             session.beginTransaction();
@@ -75,7 +93,6 @@ public class TicketDao implements CollectionInDatabaseManager {
         }
 
     }
-    @Override
     public void update(Ticket newTicket, String login) throws FailedTransactionException,NoAccessException {
         @Cleanup var session = sessionFactory.openSession();
         try {
@@ -96,7 +113,6 @@ public class TicketDao implements CollectionInDatabaseManager {
 
 
     }
-    @Override
     public void removeTicket(Ticket tick) throws FailedTransactionException{
         @Cleanup var session = sessionFactory.openSession();
         try {
@@ -111,7 +127,6 @@ public class TicketDao implements CollectionInDatabaseManager {
         }
 
     }
-    @Override
     public void removeTicket(Long id, String login) throws FailedTransactionException, NoAccessException {
         @Cleanup var session = sessionFactory.openSession();
         try {

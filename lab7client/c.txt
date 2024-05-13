@@ -1,3 +1,0 @@
-show
-execute_script a.txt
-clear

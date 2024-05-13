@@ -1,6 +1,6 @@
 package org.example.connection;
 
-import org.common.network.Response;
+import org.example.network.Response;
 
 import java.net.SocketAddress;
 import java.util.ArrayList;

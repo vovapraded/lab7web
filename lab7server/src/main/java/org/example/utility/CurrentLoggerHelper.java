@@ -1,7 +1,7 @@
 package org.example.utility;
 
-import org.common.commands.Command;
-import org.common.commands.inner.objects.LoggerHelper;
+import org.example.commands.Command;
+import org.example.commands.inner.objects.LoggerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

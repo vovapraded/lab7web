@@ -1,10 +1,9 @@
 package org.example.managers;
 
-import org.common.commands.Command;
-import org.common.managers.ResponseManager;
-import org.common.network.Response;
+import org.example.commands.Command;
+import org.example.managers.ResponseManager;
+import org.example.network.Response;
 import org.example.connection.ResponsePublisher;
-import org.example.utility.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

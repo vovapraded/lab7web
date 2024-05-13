@@ -1,9 +1,9 @@
 package org.example.connection;
 
-import org.common.network.Response;
-import org.common.serial.SerializeException;
-import org.common.serial.Serializer;
-import org.common.utility.PropertyUtil;
+import org.example.network.Response;
+import org.example.serial.SerializeException;
+import org.example.serial.Serializer;
+import org.example.utility.PropertyUtil;
 import org.example.managers.CurrentResponseManager;
 import org.example.threads.HashmapCleaner;
 import org.example.threads.ThreadHelper;
@@ -16,11 +16,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.AbstractMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class UdpServer implements ResponseListener {
 
@@ -49,7 +45,6 @@ public class UdpServer implements ResponseListener {
         // Запускаем поток HashmapCleaner с интервалом в TIMEOUT миллисекунд
         scheduler.scheduleAtFixedRate(new HashmapCleaner(), 0, HashmapCleaner.getTIMEOUT(), TimeUnit.MILLISECONDS);
         logger.debug("Hashmap Cleaner запущен");
-
 
     }
 

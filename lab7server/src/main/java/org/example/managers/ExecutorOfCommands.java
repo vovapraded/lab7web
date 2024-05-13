@@ -1,13 +1,13 @@
 package org.example.managers;
 
-import org.common.commands.Command;
-import org.common.commands.authorization.Register;
-import org.common.managers.Collection;
-import org.common.network.Response;
-import org.common.utility.InvalidFormatException;
+import org.example.commands.Command;
+import org.example.commands.authorization.Register;
+import org.example.managers.Collection;
+import org.example.network.Response;
+import org.example.utility.InvalidFormatException;
 import org.example.authorization.AuthorizationException;
 import org.example.authorization.AuthorizationManager;
-import org.common.commands.authorization.NoAccessException;
+import org.example.commands.authorization.NoAccessException;
 import org.example.dao.FailedTransactionException;
 import org.example.utility.CurrentLoggerHelper;
 import org.jetbrains.annotations.NotNull;
