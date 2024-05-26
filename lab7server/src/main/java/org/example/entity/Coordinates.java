@@ -1,6 +1,8 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +23,9 @@ public class Coordinates implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "coord_seq")
     @SequenceGenerator(name = "coord_seq", sequenceName = "coordinates_id_seq",schema = "s409397", allocationSize = 1)
     private Long id;
+    @NotNull
     private Double x; //Поле не может быть null
+    @NotNull @Min(-617L)
     private long y; //Значение поля должно быть больше -618
     public Coordinates(Double x, long y) {
         this.x = x;

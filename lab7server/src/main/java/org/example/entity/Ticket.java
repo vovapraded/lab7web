@@ -1,10 +1,16 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,24 +29,32 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
     @Serial
     private static final long serialVersionUID = "Ticket".hashCode();
     @Id
+    @Positive @NotNull
     Long id;
+    @NotBlank
     private String name; //Поле не может быть null, Строка не может быть пустой
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coordinates_id")
+    @Valid
     private Coordinates coordinates; //Поле не может быть null
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    @NotNull @PastOrPresent
+    private Date creationDate;
+    @Positive @NotNull//Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Long price; //Поле не может быть null, Значение поля должно быть больше 0
-    private Long discount; //Поле может быть null, Значение поля должно быть больше 0, Максимальное значение поля: 100
+    @Positive
+    private Long discount; //Поле может быть null, Значение поля должно быть больше 0
     private Boolean refundable; //Поле может быть null
     @Enumerated(EnumType.STRING)
     @Column(name = "ticket_type")
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Basic(optional=false)
+    @NotNull
     private TicketType ticketType; //Поле не может быть null
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "venue_id")
+    @Valid
     private Venue venue; //Поле не может быть null
     @Column(name = "created_by")
     private  String createdBy; //Поле не может быть null, Строка не может быть пустой

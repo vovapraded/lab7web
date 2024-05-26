@@ -4,7 +4,9 @@ import lombok.Setter;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.example.dao.FailedTransactionException;
 import org.example.dao.UserDao;
+import org.example.entity.User;
 import org.example.managers.HibernateManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -29,13 +31,15 @@ public class AuthorizationManager {
         }
         if (currentHash.equals(hash)) passwordCorrect = true;
         return new ImmutablePair<>(loginCorrect,passwordCorrect);
+
     }
-    public static void register(String login,String password)  throws FailedTransactionException  {
+
+    public static User register(String login, String password)  throws FailedTransactionException  {
         if (!loginIsUnique(login))
             throw new AuthorizationException("Пользователь с таким логином уже существует");
-        saveNewPassword(login,password);
+        return saveNewPassword(login,password);
     }
-    private static void saveNewPassword(String login,String password) throws FailedTransactionException {
+    private static User saveNewPassword(String login,String password) throws FailedTransactionException {
         ImmutablePair<BigInteger, String> hashAndSalt = null;
         try {
             hashAndSalt = PasswordManager.getHash(password);
@@ -44,7 +48,7 @@ public class AuthorizationManager {
         }
         var hash = hashAndSalt.getLeft();
         var salt = hashAndSalt.getRight();
-        userDao.insertUser(login,hash,salt);
+        return userDao.insertUser(login,hash,salt);
     }
     private static boolean loginIsUnique(String login) throws FailedTransactionException {
         var hashAndSalt=userDao.getPasswordAndSaltByLogin(login);

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="/styles/style.css">
+<!--    <link rel="stylesheet" href="/styles/style.css">-->
+    <link rel="icon" href="/images/logo.svg" type="image/x-icon">
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
@@ -10,17 +11,24 @@
      th:text="${session[SPRING_SECURITY_LAST_EXCEPTION].message}" >
 </div>
 <form th:action="@{/login}" method="post">
-    <label  for="username">Username:
-        <input id="username" type="text" name="username">
+    <label  for="login">Login:
+        <input id="login" type="text" name="login">
     </label><br>
     <label  for="password">Password:
-        <input id="password" type="text" name="password">
+        <input id="password" type="password" name="password" autocomplete="current-password">
     </label><br>
+
+<!--    <label for="rememberPassword">Запомнить пароль-->
+<!--        <input id="rememberPassword" name="rememberPassword" type="checkbox">-->
+
+<!--    </label><br>-->
+
     <button type="submit">Login</button>
 
 </form>
-<form action="/authorization/registration">
+<form th:action="@{/register}">
     <button type="submit">Registration</button>
 </form>
+<!--<script src="/scripts/login.js"></script>-->
 </body>
 </html>

@@ -1,6 +1,7 @@
 package org.example.commands;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.Main;
 import org.example.commands.inner.objects.Authorization;
 import org.example.commands.inner.objects.LoggerHelper;
 import org.example.entity.Ticket;
@@ -8,6 +9,9 @@ import org.example.managers.Collection;
 import org.example.managers.CreateTicket;
 import org.example.managers.ResponseManager;
 import org.example.utility.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.stereotype.Component;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,6 +21,7 @@ import java.io.Serializable;
  */
 @Setter
 @Getter
+@Component
 public abstract class Command implements Serializable {
     @Serial
     private static final long serialVersionUID = "Command".hashCode();
@@ -42,7 +47,10 @@ public abstract class Command implements Serializable {
     protected String stringArg=null;
     protected Ticket ticketArg=null;
     private Authorization authorization = null;
-    protected static final Collection collection = Collection.getInstance();
+    protected static final Collection collection;
+    static {
+        collection=Main.getContext().getBean(Collection.class);
+    }
     protected  transient    Console console ;
     protected  transient ResponseManager responseManager ;
     public void setConsole (Console console){

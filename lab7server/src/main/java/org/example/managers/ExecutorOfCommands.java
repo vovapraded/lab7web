@@ -1,5 +1,6 @@
 package org.example.managers;
 
+import org.example.Main;
 import org.example.commands.Command;
 import org.example.commands.authorization.Register;
 import org.example.managers.Collection;
@@ -23,7 +24,8 @@ public class ExecutorOfCommands extends Thread{
 
 
     private final CurrentLoggerHelper loggerHelper = new CurrentLoggerHelper();
-    private final Collection collection = Collection.getInstance();
+    private final Collection collection =          Main.getContext().getBean(Collection.class);
+    ;
     private  final CurrentResponseManager responseManager;
     private static final Logger logger = LoggerFactory.getLogger(ExecutorOfCommands.class);
     private final Command command;

@@ -2,10 +2,17 @@ package org.example.managers;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.Main;
 import org.example.commands.authorization.NoAccessException;
 import org.example.dao.TicketDao;
 import org.example.entity.Ticket;
 import org.example.entity.Venue;
+import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,22 +21,27 @@ import java.util.stream.Collectors;
 /**
  * The class that manages the collection
  */
-
+@Service
     public  class Collection  {
 
-    public static Collection getInstance() {
-        return INSTANCE;
-    }
+//    public static Collection getInstance() {
+//        return INSTANCE;
+//    }
+    private static final Logger logger = LoggerFactory.getLogger(Collection.class);
 
-    private static final Collection INSTANCE= new Collection();
+
+//    private static final Collection INSTANCE= new Collection();
     private Date currentDate;
-    private ConcurrentHashMap<Long,Ticket> hashMap = new ConcurrentHashMap<>();
-    @Setter @Getter
-    private TicketDao ticketDao;
+    private final ConcurrentHashMap<Long,Ticket> hashMap = new ConcurrentHashMap<>();
+    private  final TicketDao ticketDao;
 
 
-    private Collection(){
+    private Collection(TicketDao ticketDao){
+        this.ticketDao = ticketDao;
         currentDate = new Date();
+        addHashMap(ticketDao.loadCollection());
+        logger.debug("Коллекция загружена. Содержит " + hashMap.size() + " элементов");
+
     }
     public void clearCollection(String login){
         ticketDao.clear(login);
@@ -95,6 +107,12 @@ import java.util.stream.Collectors;
 
     public ConcurrentHashMap<Long, Ticket>  getHashMap() {
         return hashMap;
+    }
+    public List<Ticket> getList() {
+        synchronized (hashMap) {
+            // Создаем неизменяемую копию текущих значений
+            return ImmutableList.copyOf(hashMap.values());
+        }
     }
 
 

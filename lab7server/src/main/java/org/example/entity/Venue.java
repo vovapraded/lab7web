@@ -1,6 +1,9 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -25,7 +28,9 @@ public class Venue extends ElementsWithId implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "venue_seq")
     @SequenceGenerator(name = "venue_seq", sequenceName = "venue_id_seq",schema = "s409397", allocationSize = 1)    Long id;
+    @NotBlank
     private String name; //Поле не может быть null, Строка не может быть пустой
+    @Positive
     private Long capacity; //Поле может быть null, Значение поля должно быть больше 0
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)

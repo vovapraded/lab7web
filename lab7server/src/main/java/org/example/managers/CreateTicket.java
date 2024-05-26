@@ -1,5 +1,6 @@
 package org.example.managers;
 
+import org.example.Main;
 import org.example.entity.*;
 import org.example.utility.Console;
 import org.example.utility.InvalidFormatException;
@@ -13,7 +14,8 @@ import org.example.utility.Validator;
 
 public class CreateTicket {
     private  final Console console;
-    private static final Collection collection=Collection.getInstance();
+    private static final Collection collection=   Main.getContext().getBean(Collection.class);
+    ;
     public CreateTicket(Console console){
         this.console = console;
     }

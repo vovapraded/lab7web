@@ -1,6 +1,5 @@
 package org.example.dao;
 
-import com.querydsl.jpa.impl.JPAInsertClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.Cleanup;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -11,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import static org.example.entity.QUser.*;
 @Repository
@@ -43,7 +43,7 @@ public class UserDao {
         }
 
     }
-    public void insertUser(String login, BigInteger hash, String salt) throws FailedTransactionException{
+    public User insertUser(String login, BigInteger hash, String salt) throws FailedTransactionException{
         @Cleanup var session = sessionFactory.openSession();
         session.beginTransaction();
         try {
@@ -54,11 +54,31 @@ public class UserDao {
                     .build();
             session.save(user);
             session.getTransaction().commit();
+            return user;
         }catch (Exception e){
             session.getTransaction().rollback();
             throw new  FailedTransactionException("Транзакция не удалась");
         }
 
 
+
     }
+
+    public List<User> findAll() {
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+        try {
+
+            var users=new JPAQuery<User>(session).
+                    select(user)
+                            .from(user)
+                                    .fetch();
+            session.getTransaction().commit();
+            return users;
+    }catch (Exception e){
+        session.getTransaction().rollback();
+        throw new  FailedTransactionException("Транзакция не удалась");
+    }
+
+}
 }

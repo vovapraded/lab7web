@@ -2,25 +2,27 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" href="/styles/style.css">
+    <link rel="icon" href="/images/logo.svg" type="image/x-icon">
+
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Register</title>
 </head>
 <body>
 <div style="color: red" th:if="${param.error != null}"
      th:text="${session[SPRING_SECURITY_LAST_EXCEPTION].message}" >
 </div>
-<form th:action="@{/login}" method="post">
-    <label  for="username">Username:
-        <input id="username" type="text" name="username">
+<form th:action="@{/register}" method="post">
+    <label  for="login">Login:
+        <input id="login" type="text" name="login">
     </label><br>
     <label  for="password">Password:
         <input id="password" type="text" name="password">
     </label><br>
-    <button type="submit">Login</button>
+    <button type="submit">Register</button>
 
 </form>
-<form action="/authorization/registration">
-    <button type="submit">Registration</button>
+<form th:action="@{/login}">
+    <button type="submit">Login</button>
 </form>
 </body>
 </html>
