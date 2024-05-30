@@ -80,6 +80,7 @@ $('#myForm').on('submit', function(event) {
         labelElement.addClass('error-highlight');
         errorElement.text(errorMessage);
     });
+    const urlParams = new URLSearchParams(window.location.search);
 
     if (isValid) {
         // Отправка формы на сервер для проверки серверной валидации
@@ -89,7 +90,7 @@ $('#myForm').on('submit', function(event) {
             data: form.serialize(),
 
             success: function(response) {
-                window.location.href = '/tickets';
+                window.location.href = `/tickets?${urlParams}`;
             },
             error: function(xhr, status, error) {
                 // Обработка ошибки ответа

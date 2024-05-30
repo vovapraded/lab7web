@@ -68,6 +68,8 @@ public class TicketController {
     }
 
 
+
+
     @GetMapping
     public String findAll(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "sorting_by", required = false) List<String> sortingBy, Model model,HttpSession session){
         TicketFilter ticketFilter= (TicketFilter) session.getAttribute("ticketFilter");
