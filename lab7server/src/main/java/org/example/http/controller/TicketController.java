@@ -117,17 +117,7 @@ public class TicketController {
             return sorts;
         }
     }
-//    @GetMapping("/tickets/insert")
-//    public String redirectToInsert(@ModelAttribute("ticket") Ticket ticket){
-//        return "ticket/insert";
-//    }
-//    @PostMapping("/insert")
-//    public String create(@ModelAttribute("ticket") @Validated Ticket ticket){
-//        System.out.println(ticket);
-//        ticket.setCreatedBy("vova");
-//        collection.insertElement(ticket);
-//        return "redirect:/tickets";
-//    }
+
 @PostMapping("/insert")
 public ResponseEntity<?> create(@Valid Ticket ticket, BindingResult bindingResult) {
     Map<String, String> errors = new HashMap<>();
@@ -153,47 +143,6 @@ public ResponseEntity<?> create(@Valid Ticket ticket, BindingResult bindingResul
         }
     }
 }
-//    @PostMapping("/insert")
-//    public String create(@Valid Ticket ticket, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-//        if (bindingResult.hasErrors()) {
-//            System.out.println("aboba");
-//            System.out.println(bindingResult.getAllErrors());
-////            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
-//            redirectAttributes.addFlashAttribute("ticket", ticket);
-//            return "ticket/insert";
-//        } else {
-//            try {
-//                // Получение текущего пользователя из контекста безопасности
-//                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//                String username = authentication.getName();
-//
-//                // Установка createdBy
-//                ticket.setCreatedBy(username);
-//                collection.insertElement(ticket);
-//
-//            }catch (FailedTransactionException e){
-//                bindingResult.addError(new ObjectError(e.getCause().toString(),e.getCause().getMessage()));
-//                return "ticket/insert";
-//            }
-//
-//            return "redirect:/tickets";
-//        }
-//    }
-
-
-    @GetMapping("/insert")
-    public String showTicketForm(Model model,HttpServletRequest request) {
-        Ticket ticket = new Ticket();
-        Coordinates coordinates = new Coordinates();
-        ticket.setCoordinates(coordinates);
-        Venue venue = new Venue();
-        ticket.setVenue(venue);
-        model.addAttribute("ticket", ticket);
-        String queryString = request.getQueryString();
-
-        // Возвращаем страницу с формой
-        return "redirect:/tickets/insertRedirect?"+queryString;
-    }
 
 
 
