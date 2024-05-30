@@ -6,6 +6,12 @@
 </head>
 <body>
 <div th:fragment="insert">
+    <div class="modalBackground" id="insertModal" style="display:none;">
+        <div class="modalActive">
+            <div class="modalClose">
+                <img th:src="@{/images/modalCross.svg}" />
+            </div>
+            <div class="modalContent">
     <form id="myForm" th:action="@{/tickets/insert}" method="post" th:object="${ticket}">
 
         <label for="id">Id:
@@ -80,7 +86,12 @@
         <button type="submit">Insert</button>
     </form>
 </div>
-<script src="/scripts/validation.js"></script>
+        </div>
+    </div>
+</div>
+<script src="/scripts/nmodal.js"></script>
+
+        <script src="/scripts/validation.js"></script>
 
 
 </body>

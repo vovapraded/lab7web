@@ -74,7 +74,8 @@ public class TicketController {
         if (ticketFilter==null){
             ticketFilter = new TicketFilter();
         }
-
+        Ticket ticket = new Ticket();
+        model.addAttribute("ticket",ticket);
         List<String> validSortingBy =  Collections.emptyList();
         var sorting = parseSortingBy(sortingBy);
         System.out.println(sorting);
@@ -179,16 +180,19 @@ public ResponseEntity<?> create(@Valid Ticket ticket, BindingResult bindingResul
 //        }
 //    }
 
+
     @GetMapping("/insert")
-    public String showTicketForm(Model model) {
+    public String showTicketForm(Model model,HttpServletRequest request) {
         Ticket ticket = new Ticket();
-        Coordinates coordinates = new Coordinates(); // Создаем объект координат
-        ticket.setCoordinates(coordinates); // Устанавливаем координаты для билета
+        Coordinates coordinates = new Coordinates();
+        ticket.setCoordinates(coordinates);
         Venue venue = new Venue();
         ticket.setVenue(venue);
         model.addAttribute("ticket", ticket);
-// Добавляем билет в модель
-        return "ticket/insert";
+        String queryString = request.getQueryString();
+
+        // Возвращаем страницу с формой
+        return "redirect:/tickets/insertRedirect?"+queryString;
     }
 
 

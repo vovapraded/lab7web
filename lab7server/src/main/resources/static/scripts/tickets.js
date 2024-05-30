@@ -120,9 +120,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         // Добавляем обработчики событий для триггеров
-        document.getElementById("trigger1").addEventListener("click", function() {
-            alert("Trigger 1 clicked");
-        });
+        // document.getElementById("insertButton").addEventListener("click", function() {
+        //
+        // });
 
         document.getElementById("trigger2").addEventListener("click", function() {
             alert("Trigger 2 clicked");

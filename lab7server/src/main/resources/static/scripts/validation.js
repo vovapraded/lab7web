@@ -1,5 +1,6 @@
 document.getElementById('insertButton').addEventListener('click', function() {
     document.getElementById('insertModal').style.display = 'block';
+    console.log("aboba")
 });
 
 function isBlank(str) {

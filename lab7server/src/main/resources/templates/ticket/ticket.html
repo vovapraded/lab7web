@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Ticket</title>
@@ -12,16 +12,17 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div><br>
-<button class="trigger" id="filterModal">Filter</button><br>
+<button class="trigger" data-modal-id="filterModal">Filter</button><br>
 <div class="dropdown">
     <button class="dropbtn">Menu</button>
     <div class="dropdown-content">
-        <button class="trigger" id="insertButton">Insert</button>
+        <button class="trigger" id="insertButton" data-modal-id="insertModal">Insert</button>
         <button id="trigger2">Trigger 2</button>
         <button id="trigger3">Trigger 3</button>
     </div>
 </div>
-<div class="modalBackground" id="modal" style="display:none;">
+
+<div class="modalBackground" id="filterModal" style="display:none;">
     <div class="modalActive">
         <div class="modalClose">
             <img th:src="@{/images/modalCross.svg}" />
@@ -175,6 +176,10 @@ Coordinates<br>
         </span>
         </div>
     </div>
+
+            <div th:insert="~{/ticket/insertForm :: insert}"></div><br>
+
+
 <table id="ticketTable">
     <thead>
     <tr>
@@ -230,21 +235,14 @@ Coordinates<br>
 <form th:action="@{/tickets/insert}"  method="get">
     <button type="submit">Insert</button>
 </form>
-<div class="modalBackground" id="insertModal" style="display:none;">
-    <div class="modalActive">
-        <div class="modalClose">
-            <img th:src="@{/images/modalCross.svg}" />
-        </div>
-        <div class="modalContent">
-            <div th:insert="~{/ticket/insertForm :: insert}"></div><br>
 
-        </div>
-    </div>
-</div>
 <!--<input type="hidden" id="currentPage" th:value="${page}">-->
 <script src="/scripts/tickets.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/scripts/nmodal.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/scripts/validation.js"></script>
+
 
 </body>
 </html>
