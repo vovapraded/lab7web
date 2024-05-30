@@ -5,6 +5,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    height: 100%;
     padding: 0px;
     background-color: #18191C;
     color: #e6dfdf;
@@ -23,9 +24,13 @@ table {
 }
 
 td {
-    text-align: left;
-    padding: 10px;
+    text-align: center;
     border: 3px solid rgb(43, 129, 17);
+    position: relative; /* Делаем ячейку таблицы позиционированной */
+    /* Добавляем отступ снизу для размещения кнопок */
+    padding: 10px 10px 55px;
+
+
 }
 th {
     text-align: center;
@@ -66,4 +71,90 @@ th {
     background-color: white !important; /* Задаем белый цвет фона для текущей страницы */
     color: #4CAF50 !important; /* Задаем черный цвет текста для текущей страницы */
     font-weight: bold !important; /* Устанавливаем жирный шрифт для текущей страницы */
+}
+.sort-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: end; /* Выравнивание по горизонтали по центру */
+    flex-direction: column; /* Размещаем кнопки вертикально */
+    position: absolute; /* Позиционирование относительно родительского элемента */
+    bottom: 0; /* Прижимаем к нижнему краю */
+    left: 50%; /* Размещаем по центру по горизонтали */
+    transform: translateX(-50%); /* Корректируем позицию для центрирования */
+
+}
+
+.sort-button {
+    border: none;
+    background: none;
+    padding-bottom: 0;
+    cursor: pointer;
+    justify-content: center; /* Выравнивание по горизонтали по центру */
+
+    margin-bottom: 5px;
+    display: inline-flex; /* Убираем лишние отступы между кнопками */
+    /* Добавляем отступ между кнопками */
+
+}
+.sort-button:last-child {
+    margin-bottom: 11px; /* Убираем отступ для первой кнопки */
+}
+
+.sort-button svg {
+    width: 16px;
+    height: 16px;
+    fill: #666; /* Серый цвет */
+}
+
+.sort-button.active svg {
+    fill: #ffffff; /* Белый цвет для нажатой кнопки */
+}
+/*.sort-buttons {*/
+/*    position: relative;*/
+/*}*/
+
+/*.sort-button {*/
+/*    position: absolute;*/
+/*    bottom: 0;*/
+/*}*/
+
+/*#ticketTable td {*/
+/*    vertical-align: middle !important; !* Выравнивание содержимого по вертикали *!*/
+/*}*/
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: #4CAF50 !important; /* Задаем черный цвет текста для текущей страницы */
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.show {
+    display: block;
 }

@@ -1,16 +1,11 @@
 package org.example.managers;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.example.Main;
 import org.example.commands.authorization.NoAccessException;
 import org.example.dao.TicketDao;
 import org.example.entity.Ticket;
 import org.example.entity.Venue;
-import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -41,8 +36,8 @@ import java.util.stream.Collectors;
         currentDate = new Date();
         addHashMap(ticketDao.loadCollection());
         logger.debug("Коллекция загружена. Содержит " + hashMap.size() + " элементов");
-
     }
+
     public void clearCollection(String login){
         ticketDao.clear(login);
         hashMap.values().removeIf(ticket -> ticket.getCreatedBy().equals(login));
@@ -110,8 +105,9 @@ import java.util.stream.Collectors;
     }
     public List<Ticket> getList() {
         synchronized (hashMap) {
+
             // Создаем неизменяемую копию текущих значений
-            return ImmutableList.copyOf(hashMap.values());
+            return  new ArrayList<>(hashMap.values());
         }
     }
 

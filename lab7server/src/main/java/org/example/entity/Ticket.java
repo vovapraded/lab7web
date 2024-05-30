@@ -14,6 +14,7 @@ import org.springframework.format.annotation.NumberFormat;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 /**
  * a class for storing ticket data
@@ -40,7 +41,7 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
     @Column(name = "creation_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull @PastOrPresent
-    private Date creationDate;
+    private LocalDate creationDate;
     @Positive @NotNull//Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Long price; //Поле не может быть null, Значение поля должно быть больше 0
     @Positive
@@ -64,7 +65,7 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
     public Ticket(String name,Coordinates coordinates,Long price,Long discount,Boolean refundable,TicketType type,Venue venue){
         this.name= name;
         this.coordinates=coordinates;
-        Date currentDate = new Date();
+        LocalDate currentDate = LocalDate.now();
         this.creationDate=currentDate;
         this.price=price;
         this.discount = discount;
@@ -78,7 +79,7 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
         this.id = id;
         this.name= name;
         this.coordinates=coordinates;
-        Date currentDate = new Date();
+        LocalDate currentDate = LocalDate.now();
         this.creationDate=currentDate;
         this.price=price;
         this.discount = discount;
@@ -89,7 +90,7 @@ public class Ticket extends ElementsWithId implements Comparable<Ticket>, Serial
 
     //конструктор с датой и id
 
-    public Ticket(Long id,String name,Coordinates coordinates,Date creationDate,Long price,Long discount,Boolean refundable,TicketType type,Venue venue){
+    public Ticket(Long id,String name,Coordinates coordinates,LocalDate creationDate,Long price,Long discount,Boolean refundable,TicketType type,Venue venue){
         this.name= name;
         this.id = id;
         this.coordinates=coordinates;

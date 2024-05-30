@@ -1,7 +1,79 @@
+.modalBackground {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+.modalActive {
+    position: absolute;
+    width: 350px;
+    height: 495px;
+    top: calc(50% - 250px);
+    left: calc(50% - 175px);
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    cursor: default;
+    padding: 0px 0px;
+    overflow-y: auto; /* Добавляем прокрутку по вертикали, если содержимое выходит за пределы */
+
+}
+
+
+.modalClose {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.modalClose img {
+    width: 24px;
+    height: 24px;
+}
+.input-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-container input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.input-container input::placeholder {
+    color: transparent;
+}
+
+.input-container::after {
+    content: attr(data-placeholder);
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.input-container input:not(:placeholder-shown) + .input-container::after {
+    opacity: 0;
+}
+
+
 .modalContent form {
     font-family: Arial, sans-serif;
     color: #333;
-    background-color: #f9f9f9;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -14,6 +86,7 @@
 
 .modalContent form input[type="text"],
 .modalContent form input[type="number"],
+.modalContent form input[type="date"],
 .modalContent form select {
     width: 100%;
     padding: 10px;
@@ -40,61 +113,7 @@
 .error-highlight select {
     border: 1px solid red !important; /* Устанавливает красную рамку для полей */
 }
+
 .error-message {
     color: red; /* Устанавливаем красный цвет для сообщений об ошибке */
-}
-.modalBackground {
-    display: none;
-    background: rgba(0, 0, 0, 0.8);
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    /* указываем z-индекс для корректного наслаивания */
-    z-index: 1;
-}
-.modalActive {
-    position: absolute;
-    width: 350px;
-    height: 495px;
-    top: calc(50% - 250px);
-    left: calc(50% - 175px);
-    border-radius: 10px;
-    background-color: rgb(255, 255, 255);
-    cursor: default;
-    padding: 0px 0px;
-    overflow-y: auto; /* Добавляем прокрутку по вертикали, если содержимое выходит за пределы */
-
-}
-/* кнопочка закрытия модального окна */
-.modalClose {
-    font-family: var(--font-regular);
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-}
-
-/* сама картинка кнопочки закрытия */
-.modalClose img {
-    margin: 3px;
-    width: 24px;
-    height: 24px;
-}
-.modalWindow {
-    position: relative;
-}
-.modal-trigger {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.modal-trigger:focus {
-    outline: none;
 }

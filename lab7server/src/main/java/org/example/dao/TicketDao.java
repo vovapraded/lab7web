@@ -44,7 +44,7 @@ public class TicketDao {
         }
         catch (Exception e){
             session.getTransaction().rollback();
-            throw new FailedTransactionException("Транзакция загрузки не удалась");
+            throw new FailedTransactionException("Транзакция загрузки не удалась",e);
         }
 
     }
@@ -61,7 +61,7 @@ public class TicketDao {
         }
         catch (Exception e){
             session.getTransaction().rollback();
-            throw new FailedTransactionException("Транзакция поиска не удалась");
+            throw new FailedTransactionException("Транзакция поиска не удалась",e);
         }
 
     }
@@ -76,7 +76,7 @@ public class TicketDao {
             session.getTransaction().commit();
         } catch (Exception e){
             session.getTransaction().rollback();
-            throw new FailedTransactionException("Транзакция не удалась");
+            throw new FailedTransactionException("Транзакция не удалась",e);
         }
 
     }
@@ -89,7 +89,7 @@ public class TicketDao {
             session.getTransaction().commit();
         } catch (Exception e){
             session.getTransaction().rollback();
-            throw new FailedTransactionException("Транзакция не удалась");
+            throw new FailedTransactionException("Транзакция не удалась",e);
         }
 
     }
@@ -108,7 +108,7 @@ public class TicketDao {
         }catch (Exception e){
             if (e instanceof NoAccessException) throw e;
             session.getTransaction().rollback();
-            throw new FailedTransactionException("Транзакция не удалась");
+            throw new FailedTransactionException("Транзакция не удалась",e);
         }
 
 
@@ -123,7 +123,7 @@ public class TicketDao {
             session.getTransaction().commit();
         } catch (Exception e){
             session.getTransaction().rollback();
-            throw new FailedTransactionException("Транзакция не удалась");
+            throw new FailedTransactionException("Транзакция не удалась",e);
         }
 
     }
@@ -145,7 +145,7 @@ public class TicketDao {
         } catch (Exception e){
             if (e instanceof NoAccessException) throw e;
             session.getTransaction().rollback();
-            throw new FailedTransactionException("Транзакция не удалась");
+            throw new FailedTransactionException("Транзакция не удалась",e);
         }
 
     }

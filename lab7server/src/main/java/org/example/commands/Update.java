@@ -6,6 +6,7 @@ import org.example.utility.Validator;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -28,7 +29,7 @@ public class Update extends Command implements Serializable {
         }
         ticketArg.setId(id);
         ticketArg.setCreatedBy(getAuthorization().getLogin());
-        ticketArg.setCreationDate(new Date());
+        ticketArg.setCreationDate(LocalDate.now());
         collection.updateTicket(ticketArg, getAuthorization().getLogin());
         responseManager.addToSend("Билет успешно введён",this);
         loggerHelper.debug("Команда "+this.getClass().getName()+"от адресса "+responseManager.getResponse(this).getAddress() +" выполнена");

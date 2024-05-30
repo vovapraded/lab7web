@@ -1,32 +1,199 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="/styles/style.css">
     <meta charset="UTF-8">
     <title>Ticket</title>
     <link rel="icon" href="/images/logo.svg" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/modalStyle.css">
+<script src="/scripts/sorting.js"></script>
+
+
 </head>
 <body>
-<div th:insert="~{fragment :: header}"></div>
-<table>
+<div th:insert="~{fragment :: header}"></div><br>
+<button class="trigger" id="filterModal">Filter</button><br>
+<div class="dropdown">
+    <button class="dropbtn">Menu</button>
+    <div class="dropdown-content">
+        <button class="trigger" id="insertButton">Insert</button>
+        <button id="trigger2">Trigger 2</button>
+        <button id="trigger3">Trigger 3</button>
+    </div>
+</div>
+<div class="modalBackground" id="modal" style="display:none;">
+    <div class="modalActive">
+        <div class="modalClose">
+            <img th:src="@{/images/modalCross.svg}" />
+        </div>
+        <span class="modalContent">
+            <form id="filterForm"  th:object="${ticketFilter}">
+              <label>Id:</label>
+<div class="input-container" data-placeholder="Min">
+    <label for="idMin"></label>
+    <input id="idMin" type="number" name="idMin" placeholder=" " th:field="*{idMin}">
+</div>
+<div class="input-container" data-placeholder="Max">
+    <label for="idMax"></label>
+    <input id="idMax" type="number" name="idMax" placeholder=" " th:field="*{idMax}">
+</div><br>
+
+<label>Name:</label>
+<div class="input-container" data-placeholder="part of name">
+    <label for="partOfName"></label>
+    <input id="partOfName" type="text" name="partOfName" placeholder=" " th:field="*{partOfName}">
+</div><br>
+
+<label>Creation Date:</label>
+<div class="input-container" data-placeholder="Min">
+    <label for="creationDateMin"></label>
+    <input id="creationDateMin" type="date" name="creationDate" placeholder=" " th:field="*{dateMin}"><br>
+</div>
+                <div class="input-container" data-placeholder="Max">
+
+     <label for="creationDateMax"></label>
+    <input id="creationDateMax" type="date" name="creationDate" placeholder=" " th:field="*{dateMax}"><br>
+                </div>
+<br>
+
+Coordinates<br>
+<label>x:</label>
+<div class="input-container" data-placeholder="Min">
+    <label for="xMin"></label>
+    <input id="xMin" type="number" name="xMin" placeholder=" " th:field="*{coordinatesFilter.XMin}">
+</div>
+<div class="input-container" data-placeholder="Max">
+    <label for="xMax"></label>
+    <input id="xMax" type="number" name="xMax" placeholder=" " th:field="*{coordinatesFilter.XMax}">
+</div><br>
+
+<label>y:</label>
+<div class="input-container" data-placeholder="Min">
+    <label for="yMin"></label>
+    <input id="yMin" type="number" name="yMin" placeholder=" " th:field="*{coordinatesFilter.YMin}">
+</div>
+<div class="input-container" data-placeholder="Max">
+    <label for="yMax"></label>
+    <input id="yMax" type="number" name="yMax" placeholder=" " th:field="*{coordinatesFilter.YMax}">
+</div><br>
+
+<label>Price:</label>
+<div class="input-container" data-placeholder="Min">
+    <label for="priceMin"></label>
+    <input id="priceMin" type="number" name="priceMin" placeholder=" " th:field="*{priceMin}">
+</div>
+<div class="input-container" data-placeholder="Max">
+    <label for="priceMax"></label>
+    <input id="priceMax" type="number" name="priceMax" placeholder=" " th:field="*{priceMax}">
+</div><br>
+
+<label>Discount:</label>
+<div class="input-container" data-placeholder="Min">
+    <label for="discountMin"></label>
+    <input id="discountMin" type="number" name="discountMin" placeholder=" " th:field="*{discountMin}">
+</div>
+<div class="input-container" data-placeholder="Max">
+    <label for="discountMax"></label>
+    <input id="discountMax" type="number" name="discountMax" placeholder=" " th:field="*{discountMax}" >
+</div><br>
+
+<label>Refundable:</label>
+<div class="input-container">
+
+    <label for="refundableTrue">true</label>
+    <input id="refundableTrue" type="checkbox" name="true" value="true" th:field="*{refundable}"  th:checked="*{ticketTypes.contains('true')}">
+</div>
+<div class="input-container">
+
+    <label for="refundableFalse">false</label>
+    <input id="refundableFalse" type="checkbox" name="options" value="false" th:field="*{refundable}"  th:checked="*{ticketTypes.contains('false')}">
+</div><br>
+<div class="input-container">
+
+    <label for="refundableNull">null</label>
+    <input id="refundableNull" type="checkbox" name="options" value="" th:field="*{refundable}"  th:checked="*{ticketTypes.contains('null')}">
+</div><br>
+
+<label>Ticket Type:</label>
+<div class="input-container">
+    <label for="VIP">VIP</label>
+    <input id="VIP" type="checkbox" name="VIP" value="VIP" th:field="*{ticketTypes}" th:checked="*{ticketTypes.contains('VIP')}">
+</div>
+<div class="input-container">
+    <label for="USUAL">USUAL</label>
+    <input id="USUAL" type="checkbox" name="USUAL" value="USUAL" th:field="*{ticketTypes}" th:checked="*{ticketTypes.contains('USUAL')}">
+</div>
+<div class="input-container">
+    <label for="BUDGETARY">BUDGETARY</label>
+    <input id="BUDGETARY" type="checkbox" name="BUDGETARY" value="BUDGETARY" th:field="*{ticketTypes}" th:checked="*{ticketTypes.contains('BUDGETARY')}">
+</div><br>
+
+                                <venue>
+                    Venue<br>
+                        <div class="input-container" data-placeholder="part of name">
+                            <label for="partOfVenueName">venue name: </label>
+                        <input id="partOfVenueName" type="text" name="partOfVenueName" th:field="*{venueFilter.partOfName}">
+                            </div>
+                                    <br>
+                   <label>Discount:</label>
+                <div class="input-container" data-placeholder="Min">
+                <label for="capacityMin"></label>
+                 <input id="capacityMin" type="number" name="capacityMin" placeholder=" " th:field="*{venueFilter.capacityMin}">
+                </div>
+                <div class="input-container" data-placeholder="Max">
+                <label for="capacityMax"></label>
+                 <input id="capacityMax" type="number" name="capacityMax" placeholder=" " th:field="*{venueFilter.capacityMax}">
+                </div>
+
+                   <br>
+                    <label >venueType:</label>
+                       <div class="input-container">
+                        <label for="BAR">BAR</label>
+<input id="BAR" type="checkbox" name="BAR" value="BAR" th:field="*{venueFilter.venueTypes}" th:checked="*{venueFilter.venueTypes.contains('BAR')}">
+                        </div>
+                        <div class="input-container">
+                        <label for="THEATRE">THEATRE</label>
+                        <input id="THEATRE" type="checkbox" name="THEATRE" value="THEATRE" th:field="*{venueFilter.venueTypes}" th:checked="*{venueFilter.venueTypes.contains('THEATRE')}" >
+                        </div>
+                        <div class="input-container">
+                        <label for="CINEMA">CINEMA</label>
+                        <input id="CINEMA" type="checkbox" name="CINEMA" value="CINEMA" th:field="*{venueFilter.venueTypes}" th:checked="*{venueFilter.venueTypes.contains('CINEMA')}"  >
+                        </div><br>
+                        <div class="input-container">
+                        <label for="STADIUM">STADIUM</label>
+                        <input id="STADIUM" type="checkbox" name="STADIUM" value="STADIUM" th:field="*{venueFilter.venueTypes}" th:checked="*{venueFilter.venueTypes.contains('STADIUM')}" >
+                        </div><br>
+                        <div class="input-container">
+                        <label for="NULL">NULL</label>
+                        <input id="NULL" type="checkbox" name="NULL" value="" th:field="*{venueFilter.venueTypes}" th:checked="*{venueFilter.venueTypes.contains('null')}" >
+                        </div><br>
+                </venue><br>
+                <button type="button" id="filterButton">Filter</button>
+    <button type="reset" id="resetButton">Reset</button>
+
+            </form>
+        </span>
+        </div>
+    </div>
+<table id="ticketTable">
     <thead>
     <tr>
-        <td rowspan="2">Id</td>
-        <td rowspan="2">Название</td>
+        <td rowspan="2" id="id">Id </td>
+        <td rowspan="2" id="name">Название </td>
         <td colspan="2">Координаты</td>
-        <td rowspan="2">Цена</td>
-        <td rowspan="2">Скидка</td>
-        <td rowspan="2">Возможность возврата</td>
-        <td rowspan="2">Тип билета</td>
-        <td colspan="3">Место встречи</td>
-        <td rowspan="2">Создан</td>
+        <td rowspan="2" id="price">Цена </td>
+        <td rowspan="2" id="discount">Скидка </td>
+        <td rowspan="2" id="refundable">Возможность возврата </td>
+        <td rowspan="2" id="ticket-type">Тип билета </td>
+        <td colspan="3" >Место встречи</td>
+        <td rowspan="2" id="created-by">Создан </td>
     </tr>
     <tr>
-        <td>x</td>
-        <td>y</td>
-        <td>Название</td>
-        <td>Вместимость</td>
-        <td>Тип места встречи</td>
+        <td id="coordinate-x">x </td>
+        <td id="coordinate-y">y </td>
+        <td id="venue-name">Название </td>
+        <td id="venue-capacity">Вместимость </td>
+        <td id="venue-type">Тип места встречи</td>
     </tr>
     </thead>
     <tbody>
@@ -63,8 +230,21 @@
 <form th:action="@{/tickets/insert}"  method="get">
     <button type="submit">Insert</button>
 </form>
+<div class="modalBackground" id="insertModal" style="display:none;">
+    <div class="modalActive">
+        <div class="modalClose">
+            <img th:src="@{/images/modalCross.svg}" />
+        </div>
+        <div class="modalContent">
+            <div th:insert="~{/ticket/insertForm :: insert}"></div><br>
+
+        </div>
+    </div>
+</div>
 <!--<input type="hidden" id="currentPage" th:value="${page}">-->
 <script src="/scripts/tickets.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/scripts/nmodal.js"></script>
 
 </body>
 </html>

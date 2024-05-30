@@ -12,84 +12,8 @@
 
 <button class="trigger" id="openModal">Open Modal</button>
 
-<div class="modalBackground" id="modal" style="display:none;">
-    <div class="modalActive">
-        <div class="modalClose">
-            <img th:src="@{/images/modalCross.svg}" />
-        </div>
-        <div class="modalContent">
-            <form id="myForm" th:action="@{/tickets/insert}" method="post" th:object="${ticket}">
-                <label for="id">Id:
-                    <input id="id" type="number" name="id" th:field="*{id}">
-                    <span id="id-error" class="error-message"></span>
-                </label><br>
-                <label for="name">Name:
-                    <input id="name" type="text" name="name" th:field="*{name}">
-                    <span id="name-error" class="error-message"></span>
-                </label><br>
-                <label for="creationDate">Creation Date: <br>
-                    <input id="creationDate" type="date" name="creationDate" th:field="*{creationDate}"><br>
-                    <span id="creationDate-error" class="error-message"></span>
-                </label><br>
 
-                 Coordinates<br>
-                    <label for="x">x:
-                        <input id="x" type="number" name="coordinates.x" th:field="*{coordinates.x}"><br>
-                        <span id="x-error" class="error-message"></span>
-                    </label><br>
-                    <label for="y">y:
-                        <input id="y" type="number" name="coordinates.y" th:field="*{coordinates.y}"><br>
-                        <span id="y-error" class="error-message"></span>
-                    </label><br>
-                <br>
-                <label for="price">Price:
-                    <input id="price" type="number" name="price" th:field="*{price}">
-                    <span id="price-error" class="error-message"></span>
-                </label><br>
-                <label for="discount">Discount:
-                    <input id="discount" type="number" name="discount" th:field="*{discount}">
-                    <span id="discount-error" class="error-message"></span>
-                </label><br>
-                <label for="refundable"> Refundable:</label>
-                <select id="refundable" name="refundable" th:field="*{refundable}">
-                    <option value="" selected>Not specified</option>
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select><br>
-                <label for="ticketType">ticketType:
-                    <select id="ticketType" name="ticketType" th:field="*{ticketType}">
-                        <option value="" selected>Not specified</option>
-                        <option value="VIP">VIP</option>
-                        <option value="USUAL">USUAL</option>
-                        <option value="BUDGETARY">BUDGETARY</option>
-                    </select><br>
-                    <span id="ticketType-error" class="error-message"></span>
-                </label><br>
-                <venue>
-                    Venue<br>
-                    <label for="venueName">name:
-                        <input id="venueName" type="text" name="venue.name" th:field="*{venue.name}">
-                        <span id="venueName-error" class="error-message"></span>
-                    </label><br>
-                    <label for="venueCapacity">capacity:
-                        <input id="venueCapacity" type="number" name="venueCapacity" th:field="*{venue.capacity}">
-                        <span id="venueCapacity-error" class="error-message"></span>
-                    </label><br>
-                    <label for="venueType">venueType:</label>
-                    <select id="venueType" name="venueType" th:field="*{venue.venueType}">
-                        <option value="" selected>Not specified</option>
-                        <option value="BAR">BAR</option>
-                        <option value="THEATRE">THEATRE</option>
-                        <option value="CINEMA">CINEMA</option>
-                        <option value="STADIUM">STADIUM</option>
-                    </select><br>
-                    <span id="venueType-error" class="error-message"></span>
-                </venue><br>
-                <button type="submit">Insert</button>
-            </form>
-        </div>
-    </div>
-</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/scripts/nmodal.js"></script>
